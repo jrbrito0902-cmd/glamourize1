@@ -17,6 +17,7 @@ const Index = () => {
       <TestimonialsSection />
       <ContactSection />
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 };

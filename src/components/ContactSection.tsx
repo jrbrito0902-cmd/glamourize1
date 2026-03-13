@@ -101,7 +101,11 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-foreground">{item.label}</p>
-                    <p className="text-muted-foreground text-sm">{item.value}</p>
+                    {"href" in item && item.href ? (
+                      <a href={item.href} target="_blank" rel="noopener noreferrer" className="text-primary text-sm hover:underline font-medium">{item.value}</a>
+                    ) : (
+                      <p className="text-muted-foreground text-sm">{item.value}</p>
+                    )}
                   </div>
                 </div>
               ))}
