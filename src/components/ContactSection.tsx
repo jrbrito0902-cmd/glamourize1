@@ -91,6 +91,7 @@ const ContactSection = () => {
               {[
                 { icon: MapPin, label: "Endereço", value: "São Paulo, SP - Brasil" },
                 { icon: Phone, label: "Telefone", value: "(11) 99999-9999" },
+                { icon: MessageCircle, label: "WhatsApp", value: "(11) 99999-9999", href: "https://wa.me/5511999999999?text=Olá! Gostaria de saber mais sobre os serviços da Estilo Vip." },
                 { icon: Mail, label: "Email", value: "contato@estilovip.com.br" },
                 { icon: Clock, label: "Horário", value: "Seg-Sex: 9h às 18h | Sáb: 9h às 13h" },
               ].map((item) => (
