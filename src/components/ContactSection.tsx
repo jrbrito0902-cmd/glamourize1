@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, MessageCircle } from "lucide-react";
 
 const ContactSection = () => {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
@@ -91,6 +91,7 @@ const ContactSection = () => {
               {[
                 { icon: MapPin, label: "Endereço", value: "São Paulo, SP - Brasil" },
                 { icon: Phone, label: "Telefone", value: "(11) 99999-9999" },
+                { icon: MessageCircle, label: "WhatsApp", value: "(11) 99999-9999", href: "https://wa.me/5511999999999?text=Olá! Gostaria de saber mais sobre os serviços da Estilo Vip." },
                 { icon: Mail, label: "Email", value: "contato@estilovip.com.br" },
                 { icon: Clock, label: "Horário", value: "Seg-Sex: 9h às 18h | Sáb: 9h às 13h" },
               ].map((item) => (
@@ -100,7 +101,11 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-foreground">{item.label}</p>
-                    <p className="text-muted-foreground text-sm">{item.value}</p>
+                    {"href" in item && item.href ? (
+                      <a href={item.href} target="_blank" rel="noopener noreferrer" className="text-primary text-sm hover:underline font-medium">{item.value}</a>
+                    ) : (
+                      <p className="text-muted-foreground text-sm">{item.value}</p>
+                    )}
                   </div>
                 </div>
               ))}
