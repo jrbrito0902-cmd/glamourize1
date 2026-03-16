@@ -6,10 +6,15 @@ const Footer = () => {
       <div className="container">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <a href="#hero" className="font-display text-3xl tracking-wider text-primary">
+            <a
+              href="#hero"
+              className="font-display text-3xl tracking-wider text-primary"
+            >
               ESTILO MODAS
             </a>
-            <p className="text-secondary-foreground/60 text-sm mt-1">Confecção & Estamparia • São Paulo, SP</p>
+            <p className="text-secondary-foreground/60 text-sm mt-1">
+              Confecção & Estamparia • São Paulo, SP
+            </p>
           </div>
 
           <div className="flex items-center gap-4">
@@ -36,7 +41,8 @@ const Footer = () => {
 
         <div className="border-t border-secondary-foreground/10 mt-8 pt-8 text-center">
           <p className="text-secondary-foreground/40 text-sm">
-            © {new Date().getFullYear()} Estilo Modas. Todos os direitos reservados.
+            © {new Date().getFullYear()} Estilo Modas. Todos os direitos
+            reservados.
           </p>
         </div>
       </div>

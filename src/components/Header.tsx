@@ -15,7 +15,10 @@ const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-secondary/95 backdrop-blur-sm">
       <div className="container flex items-center justify-between h-16">
-        <a href="#hero" className="font-display text-2xl tracking-wider text-primary">
+        <a
+          href="#hero"
+          className="font-display text-2xl tracking-wider text-primary"
+        >
           ESTILO VIP
         </a>
 

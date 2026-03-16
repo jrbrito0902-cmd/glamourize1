@@ -23,7 +23,9 @@ const TestimonialsSection = () => {
     <section id="depoimentos" className="section-padding bg-secondary">
       <div className="container">
         <div className="text-center mb-16">
-          <p className="text-primary font-body text-sm uppercase tracking-[0.3em] mb-3 font-medium">Depoimentos</p>
+          <p className="text-primary font-body text-sm uppercase tracking-[0.3em] mb-3 font-medium">
+            Depoimentos
+          </p>
           <h2 className="font-display text-3xl md:text-4xl tracking-wide uppercase text-secondary-foreground">
             O Que Nossos Clientes Dizem
           </h2>
@@ -31,14 +33,21 @@ const TestimonialsSection = () => {
 
         <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((t) => (
-            <div key={t.name} className="bg-secondary-foreground/5 rounded-lg p-8 border border-secondary-foreground/10">
+            <div
+              key={t.name}
+              className="bg-secondary-foreground/5 rounded-lg p-8 border border-secondary-foreground/10"
+            >
               <div className="flex gap-1 mb-4">
                 {Array.from({ length: t.rating }).map((_, i) => (
                   <Star key={i} className="w-5 h-5 fill-primary text-primary" />
                 ))}
               </div>
-              <p className="text-secondary-foreground/80 leading-relaxed mb-6 italic">"{t.text}"</p>
-              <p className="font-display text-xl tracking-wider text-primary">{t.name}</p>
+              <p className="text-secondary-foreground/80 leading-relaxed mb-6 italic">
+                "{t.text}"
+              </p>
+              <p className="font-display text-xl tracking-wider text-primary">
+                {t.name}
+              </p>
             </div>
           ))}
         </div>

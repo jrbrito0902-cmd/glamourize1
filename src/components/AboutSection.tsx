@@ -14,13 +14,20 @@ const AboutSection = () => {
         <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Text side */}
           <div>
-            <p className="text-primary font-body text-sm uppercase tracking-[0.3em] mb-3 font-medium">Quem somos</p>
+            <p className="text-primary font-body text-sm uppercase tracking-[0.3em] mb-3 font-medium">
+              Quem somos
+            </p>
             <h2 className="heading-section mb-6">Sobre a Estilo Modas</h2>
             <p className="text-muted-foreground leading-relaxed mb-6">
-              Somos uma confecção localizada em São Paulo, SP, especializada em criar roupas que expressam a identidade de cada cliente. Com paixão pela moda e compromisso com a qualidade, transformamos tecidos em peças de arte.
+              Somos uma confecção localizada em São Paulo, SP, especializada em
+              criar roupas que expressam a identidade de cada cliente. Com
+              paixão pela moda e compromisso com a qualidade, transformamos
+              tecidos em peças de arte.
             </p>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              Da roupa personalizada à estamparia profissional, cada projeto é tratado com dedicação e atenção aos mínimos detalhes. Nosso objetivo é superar suas expectativas.
+              Da roupa personalizada à estamparia profissional, cada projeto é
+              tratado com dedicação e atenção aos mínimos detalhes. Nosso
+              objetivo é superar suas expectativas.
             </p>
             <ul className="space-y-3">
               {highlights.map((item) => (
@@ -36,14 +43,24 @@ const AboutSection = () => {
           <div className="relative">
             <div className="aspect-[4/5] rounded-lg bg-secondary overflow-hidden flex items-center justify-center">
               <div className="text-center p-8">
-                <span className="font-display text-7xl md:text-8xl text-primary block leading-none">10+</span>
-                <span className="font-display text-2xl text-secondary-foreground tracking-wider mt-2 block">Anos de<br />Experiência</span>
+                <span className="font-display text-7xl md:text-8xl text-primary block leading-none">
+                  10+
+                </span>
+                <span className="font-display text-2xl text-secondary-foreground tracking-wider mt-2 block">
+                  Anos de
+                  <br />
+                  Experiência
+                </span>
               </div>
             </div>
             <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-primary rounded-lg flex items-center justify-center shadow-elevated">
               <div className="text-center">
-                <span className="font-display text-3xl text-primary-foreground block">500+</span>
-                <span className="text-primary-foreground/80 text-xs uppercase tracking-wider">Clientes</span>
+                <span className="font-display text-3xl text-primary-foreground block">
+                  500+
+                </span>
+                <span className="text-primary-foreground/80 text-xs uppercase tracking-wider">
+                  Clientes
+                </span>
               </div>
             </div>
           </div>

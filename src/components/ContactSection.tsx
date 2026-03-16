@@ -3,15 +3,26 @@ import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Mail, Clock, MessageCircle } from "lucide-react";
 
 const ContactSection = () => {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
   const [sent, setSent] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // mailto fallback
-    const subject = encodeURIComponent(`Contato de ${form.name} - Estilo Modas`);
-    const body = encodeURIComponent(`Nome: ${form.name}\nEmail: ${form.email}\nTelefone: ${form.phone}\n\nMensagem:\n${form.message}`);
-    window.open(`mailto:contato@estilomodas.com.br?subject=${subject}&body=${body}`);
+    const subject = encodeURIComponent(
+      `Contato de ${form.name} - Estilo Modas`,
+    );
+    const body = encodeURIComponent(
+      `Nome: ${form.name}\nEmail: ${form.email}\nTelefone: ${form.phone}\n\nMensagem:\n${form.message}`,
+    );
+    window.open(
+      `mailto:contato@estilomodas.com.br?subject=${subject}&body=${body}`,
+    );
     setSent(true);
   };
 
@@ -19,7 +30,9 @@ const ContactSection = () => {
     <section id="contato" className="section-padding bg-muted">
       <div className="container">
         <div className="text-center mb-16">
-          <p className="text-primary font-body text-sm uppercase tracking-[0.3em] mb-3 font-medium">Fale conosco</p>
+          <p className="text-primary font-body text-sm uppercase tracking-[0.3em] mb-3 font-medium">
+            Fale conosco
+          </p>
           <h2 className="heading-section">Entre em Contato</h2>
         </div>
 
@@ -28,13 +41,19 @@ const ContactSection = () => {
           <div className="bg-card rounded-lg p-8 shadow-card">
             {sent ? (
               <div className="text-center py-12">
-                <p className="font-display text-2xl text-secondary mb-2">Mensagem Enviada!</p>
-                <p className="text-muted-foreground">Entraremos em contato em breve.</p>
+                <p className="font-display text-2xl text-secondary mb-2">
+                  Mensagem Enviada!
+                </p>
+                <p className="text-muted-foreground">
+                  Entraremos em contato em breve.
+                </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Nome</label>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">
+                    Nome
+                  </label>
                   <input
                     type="text"
                     required
@@ -46,39 +65,56 @@ const ContactSection = () => {
                 </div>
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-1.5">Email</label>
+                    <label className="block text-sm font-medium text-foreground mb-1.5">
+                      Email
+                    </label>
                     <input
                       type="email"
                       required
                       value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, email: e.target.value })
+                      }
                       className="w-full rounded-lg border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                       placeholder="seu@email.com"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-1.5">Telefone</label>
+                    <label className="block text-sm font-medium text-foreground mb-1.5">
+                      Telefone
+                    </label>
                     <input
                       type="tel"
                       value={form.phone}
-                      onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, phone: e.target.value })
+                      }
                       className="w-full rounded-lg border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                       placeholder="(11) 99999-9999"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Mensagem</label>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">
+                    Mensagem
+                  </label>
                   <textarea
                     required
                     rows={4}
                     value={form.message}
-                    onChange={(e) => setForm({ ...form, message: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, message: e.target.value })
+                    }
                     className="w-full rounded-lg border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none"
                     placeholder="Como podemos ajudar?"
                   />
                 </div>
-                <Button type="submit" variant="hero" size="lg" className="w-full">
+                <Button
+                  type="submit"
+                  variant="hero"
+                  size="lg"
+                  className="w-full"
+                >
                   Enviar Mensagem
                 </Button>
               </form>
@@ -89,22 +125,50 @@ const ContactSection = () => {
           <div className="space-y-8">
             <div className="space-y-5">
               {[
-                { icon: MapPin, label: "Endereço", value: "São Paulo, SP - Brasil" },
+                {
+                  icon: MapPin,
+                  label: "Endereço",
+                  value: "São Paulo, SP - Brasil",
+                },
                 { icon: Phone, label: "Telefone", value: "(11) 99999-9999" },
-                { icon: MessageCircle, label: "WhatsApp", value: "(11) 99999-9999", href: "https://wa.me/5511999999999?text=Olá! Gostaria de saber mais sobre os serviços da Estilo Modas." },
-                { icon: Mail, label: "Email", value: "contato@estilomodas.com.br" },
-                { icon: Clock, label: "Horário", value: "Seg-Sex: 9h às 18h | Sáb: 9h às 13h" },
+                {
+                  icon: MessageCircle,
+                  label: "WhatsApp",
+                  value: "(11) 99999-9999",
+                  href: "https://wa.me/5511999999999?text=Olá! Gostaria de saber mais sobre os serviços da Estilo Modas.",
+                },
+                {
+                  icon: Mail,
+                  label: "Email",
+                  value: "contato@estilomodas.com.br",
+                },
+                {
+                  icon: Clock,
+                  label: "Horário",
+                  value: "Seg-Sex: 9h às 18h | Sáb: 9h às 13h",
+                },
               ].map((item) => (
                 <div key={item.label} className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <item.icon className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-foreground">{item.label}</p>
+                    <p className="text-sm font-medium text-foreground">
+                      {item.label}
+                    </p>
                     {"href" in item && item.href ? (
-                      <a href={item.href} target="_blank" rel="noopener noreferrer" className="text-primary text-sm hover:underline font-medium">{item.value}</a>
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary text-sm hover:underline font-medium"
+                      >
+                        {item.value}
+                      </a>
                     ) : (
-                      <p className="text-muted-foreground text-sm">{item.value}</p>
+                      <p className="text-muted-foreground text-sm">
+                        {item.value}
+                      </p>
                     )}
                   </div>
                 </div>
