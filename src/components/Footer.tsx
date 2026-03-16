@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <a href="#hero" className="font-display text-3xl tracking-wider text-primary">
-              ESTILO VIP
+              ESTILO MODAS
             </a>
             <p className="text-secondary-foreground/60 text-sm mt-1">Confecção & Estamparia • São Paulo, SP</p>
           </div>

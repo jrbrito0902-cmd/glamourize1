@@ -15,7 +15,7 @@ const AboutSection = () => {
           {/* Text side */}
           <div>
             <p className="text-primary font-body text-sm uppercase tracking-[0.3em] mb-3 font-medium">Quem somos</p>
-            <h2 className="heading-section mb-6">Sobre a Estilo Vip</h2>
+            <h2 className="heading-section mb-6">Sobre a Estilo Modas</h2>
             <p className="text-muted-foreground leading-relaxed mb-6">
               Somos uma confecção localizada em São Paulo, SP, especializada em criar roupas que expressam a identidade de cada cliente. Com paixão pela moda e compromisso com a qualidade, transformamos tecidos em peças de arte.
             </p>
@@ -37,7 +37,7 @@ const AboutSection = () => {
             <div className="aspect-[4/5] rounded-lg bg-secondary overflow-hidden flex items-center justify-center">
               <div className="text-center p-8">
                 <span className="font-display text-7xl md:text-8xl text-primary block leading-none">10+</span>
-                <span className="font-display text-2xl text-secondary-foreground tracking-wider mt-2 block">Anos de<br/>Experiência</span>
+                <span className="font-display text-2xl text-secondary-foreground tracking-wider mt-2 block">Anos de<br />Experiência</span>
               </div>
             </div>
             <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-primary rounded-lg flex items-center justify-center shadow-elevated">

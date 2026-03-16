@@ -9,9 +9,9 @@ const ContactSection = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // mailto fallback
-    const subject = encodeURIComponent(`Contato de ${form.name} - Estilo Vip`);
+    const subject = encodeURIComponent(`Contato de ${form.name} - Estilo Modas`);
     const body = encodeURIComponent(`Nome: ${form.name}\nEmail: ${form.email}\nTelefone: ${form.phone}\n\nMensagem:\n${form.message}`);
-    window.open(`mailto:contato@estilovip.com.br?subject=${subject}&body=${body}`);
+    window.open(`mailto:contato@estilomodas.com.br?subject=${subject}&body=${body}`);
     setSent(true);
   };
 
@@ -91,8 +91,8 @@ const ContactSection = () => {
               {[
                 { icon: MapPin, label: "Endereço", value: "São Paulo, SP - Brasil" },
                 { icon: Phone, label: "Telefone", value: "(11) 99999-9999" },
-                { icon: MessageCircle, label: "WhatsApp", value: "(11) 99999-9999", href: "https://wa.me/5511999999999?text=Olá! Gostaria de saber mais sobre os serviços da Estilo Vip." },
-                { icon: Mail, label: "Email", value: "contato@estilovip.com.br" },
+                { icon: MessageCircle, label: "WhatsApp", value: "(11) 99999-9999", href: "https://wa.me/5511999999999?text=Olá! Gostaria de saber mais sobre os serviços da Estilo Modas." },
+                { icon: Mail, label: "Email", value: "contato@estilomodas.com.br" },
                 { icon: Clock, label: "Horário", value: "Seg-Sex: 9h às 18h | Sáb: 9h às 13h" },
               ].map((item) => (
                 <div key={item.label} className="flex items-start gap-4">
