@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { ShoppingCart, Plus, Minus, X, Check } from "lucide-react";
+import { ShoppingCart, Plus, Minus, X, ArrowRight } from "lucide-react";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { Link } from "react-router-dom";
 
 interface Product {
   id: string;
@@ -12,6 +13,10 @@ interface Product {
 
 interface CartItem extends Product {
   quantity: number;
+}
+
+interface ProductCatalogProps {
+  fullPage?: boolean;
 }
 
 const MOCK_PRODUCTS: Product[] = [
@@ -39,12 +44,27 @@ const MOCK_PRODUCTS: Product[] = [
     price: 159.90,
     image: "/src/assets/products/trousers.png",
   },
+  // Simulando mais itens para a página completa
+  {
+    id: "5",
+    name: "Body Silk Touch",
+    price: 79.90,
+    image: "/src/assets/products/blouse.png",
+  },
+  {
+    id: "6",
+    name: "Shorts Denim Vintage",
+    price: 129.90,
+    image: "/src/assets/products/jacket.png",
+  },
 ];
 
-const ProductCatalog = () => {
+const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { toast } = useToast();
+
+  const displayedProducts = fullPage ? MOCK_PRODUCTS : MOCK_PRODUCTS.slice(0, 4);
 
   const addToCart = (product: Product) => {
     setCart((prev) => {
@@ -81,7 +101,7 @@ const ProductCatalog = () => {
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const checkoutWhatsApp = () => {
-    const phone = "5511999999999"; // Substituir pelo número real
+    const phone = "5511999999999";
     const message = `Olá! Gostaria de fazer o pedido:\n\n${cart
       .map((item) => `- ${item.quantity}x ${item.name} (R$ ${item.price.toFixed(2)})`)
       .join("\n")}\n\n*Total: R$ ${total.toFixed(2)}*\n\nMeu CEP é: `;
@@ -90,29 +110,41 @@ const ProductCatalog = () => {
   };
 
   return (
-    <section id="catalogo" className="section-padding bg-white">
+    <section id="catalogo" className={`section-padding ${fullPage ? "bg-background" : "bg-white"}`}>
       <div className="container mx-auto">
-        <div className="flex justify-between items-end mb-12">
-          <div>
-            <h2 className="heading-section mb-2">Coleção Exclusiva</h2>
-            <p className="text-muted-foreground text-lg">Escolha suas peças favoritas e finalize pelo WhatsApp.</p>
+        {!fullPage && (
+          <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 gap-6">
+            <div>
+              <h2 className="heading-section mb-2 text-center md:text-left">Destaques da Coleção</h2>
+              <p className="text-muted-foreground text-lg text-center md:text-left">Confira nossas peças mais queridas.</p>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <Link to="/catalog">
+                <Button className="bg-primary hover:bg-primary/90 text-white font-bold h-12 px-8 rounded-full shadow-lg hover:scale-105 transition-all flex items-center gap-2">
+                  VER CATÁLOGO COMPLETO
+                  <ArrowRight size={20} />
+                </Button>
+              </Link>
+              
+              <button 
+                onClick={() => setIsCartOpen(true)}
+                className="relative p-3 bg-secondary text-white rounded-full hover:scale-105 transition-transform shadow-lg"
+              >
+                <ShoppingCart size={24} />
+                {cart.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-primary text-white text-xs w-6 h-6 rounded-full flex items-center justify-center font-bold">
+                    {cart.reduce((s, i) => s + i.quantity, 0)}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
-          <button 
-            onClick={() => setIsCartOpen(true)}
-            className="relative p-3 bg-secondary text-white rounded-full hover:scale-105 transition-transform"
-          >
-            <ShoppingCart size={24} />
-            {cart.length > 0 && (
-              <span className="absolute -top-1 -right-1 bg-primary text-white text-xs w-6 h-6 rounded-full flex items-center justify-center font-bold">
-                {cart.reduce((s, i) => s + i.quantity, 0)}
-              </span>
-            )}
-          </button>
-        </div>
+        )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {MOCK_PRODUCTS.map((product) => (
-            <div key={product.id} className="group relative flex flex-col bg-muted/30 rounded-2xl overflow-hidden hover:shadow-card transition-all duration-300">
+          {displayedProducts.map((product) => (
+            <div key={product.id} className="group relative flex flex-col bg-muted/30 rounded-2xl overflow-hidden hover:shadow-card transition-all duration-300 border border-transparent hover:border-primary/20">
               <div className="aspect-[3/4] overflow-hidden">
                 <img 
                   src={product.image} 
@@ -134,15 +166,31 @@ const ProductCatalog = () => {
             </div>
           ))}
         </div>
+
+        {fullPage && (
+          <div className="fixed bottom-8 right-8 z-[60]">
+             <button 
+                onClick={() => setIsCartOpen(true)}
+                className="relative p-5 bg-secondary text-white rounded-full hover:scale-110 transition-all shadow-elevated"
+              >
+                <ShoppingCart size={32} />
+                {cart.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-primary text-white text-base w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-lg border-2 border-white">
+                    {cart.reduce((s, i) => s + i.quantity, 0)}
+                  </span>
+                )}
+              </button>
+          </div>
+        )}
       </div>
 
-      {/* Cart Drawer Overlay */}
+      {/* Cart Drawer Overlay (mantido igual) */}
       {isCartOpen && (
-        <div className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-sm transition-opacity">
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm transition-opacity">
           <div className="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-elevated flex flex-col animate-in slide-in-from-right duration-300">
-            <div className="p-6 border-b flex justify-between items-center">
-              <h2 className="text-2xl font-display uppercase">Meu Carrinho</h2>
-              <button onClick={() => setIsCartOpen(false)} className="p-2 hover:bg-muted rounded-full transition-colors">
+            <div className="p-6 border-b flex justify-between items-center bg-secondary text-white">
+              <h2 className="text-2xl font-display uppercase">Meu Pedido</h2>
+              <button onClick={() => setIsCartOpen(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
                 <X size={24} />
               </button>
             </div>
@@ -156,21 +204,21 @@ const ProductCatalog = () => {
                 </div>
               ) : (
                 cart.map((item) => (
-                  <div key={item.id} className="flex gap-4">
-                    <div className="w-20 h-24 bg-muted rounded-lg overflow-hidden flex-shrink-0">
+                  <div key={item.id} className="flex gap-4 p-2 hover:bg-muted/30 rounded-xl transition-colors">
+                    <div className="w-20 h-24 bg-muted rounded-lg overflow-hidden flex-shrink-0 border">
                       <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-grow">
                       <div className="flex justify-between items-start mb-1">
-                        <h4 className="font-bold">{item.name}</h4>
-                        <button onClick={() => removeFromCart(item.id)} className="text-muted-foreground hover:text-destructive">
+                        <h4 className="font-bold text-secondary">{item.name}</h4>
+                        <button onClick={() => removeFromCart(item.id)} className="text-muted-foreground hover:text-destructive p-1">
                           <X size={16} />
                         </button>
                       </div>
-                      <p className="text-primary font-bold mb-2">R$ {item.price.toFixed(2)}</p>
+                      <p className="text-primary font-bold mb-2 font-display text-xl">R$ {item.price.toFixed(2)}</p>
                       <div className="flex items-center gap-3">
                         <button onClick={() => updateQuantity(item.id, -1)} className="p-1 border rounded hover:bg-muted"><Minus size={14} /></button>
-                        <span className="font-medium">{item.quantity}</span>
+                        <span className="font-medium min-w-[20px] text-center">{item.quantity}</span>
                         <button onClick={() => updateQuantity(item.id, 1)} className="p-1 border rounded hover:bg-muted"><Plus size={14} /></button>
                       </div>
                     </div>
@@ -182,14 +230,14 @@ const ProductCatalog = () => {
             {cart.length > 0 && (
               <div className="p-6 border-t bg-muted/20">
                 <div className="flex justify-between items-center mb-6">
-                  <span className="text-muted-foreground">Subtotal</span>
-                  <span className="text-2xl font-bold">R$ {total.toFixed(2)}</span>
+                  <span className="text-muted-foreground font-medium uppercase tracking-wider">Total do Pedido</span>
+                  <span className="text-3xl font-bold bg-primary text-white px-4 py-1 rounded-lg">R$ {total.toFixed(2)}</span>
                 </div>
-                <Button onClick={checkoutWhatsApp} className="w-full h-14 text-lg bg-[#25D366] hover:bg-[#128C7E] text-white">
-                  Concluir no WhatsApp
+                <Button onClick={checkoutWhatsApp} className="w-full h-16 text-xl bg-[#25D366] hover:bg-[#128C7E] text-white font-bold rounded-xl shadow-lg hover:scale-[1.02] transition-all">
+                   Finalizar no WhatsApp
                 </Button>
                 <p className="text-center text-xs text-muted-foreground mt-4 italic">
-                  Você será redirecionado para o WhatsApp com seu pedido pronto.
+                  Suas peças serão reservadas após o envio da mensagem.
                 </p>
               </div>
             )}
