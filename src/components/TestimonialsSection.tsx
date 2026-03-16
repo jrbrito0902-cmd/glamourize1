@@ -13,7 +13,7 @@ const testimonials = [
   },
   {
     name: "Fernanda L.",
-    text: "Atendimento excelente e peças de qualidade excepcional. A Estilo Vip entregou tudo no prazo e com um carinho especial. Já sou cliente fiel!",
+    text: "Atendimento excelente e peças de qualidade excepcional. A Estilo Modas entregou tudo no prazo e com um carinho especial. Já sou cliente fiel!",
     rating: 5,
   },
 ];

@@ -11,7 +11,7 @@ const HeroSection = () => {
       <div className="absolute inset-0">
         <img
           src={heroBg}
-          alt="Ateliê Estilo Vip"
+          alt="Ateliê Estilo Modas"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-secondary/70" />
