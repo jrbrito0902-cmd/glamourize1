@@ -10,7 +10,7 @@ const Footer = () => {
               href="#hero"
               className="font-display text-3xl tracking-wider text-primary"
             >
-              ESTILO MODAS
+              E.ESTILO MODAS
             </a>
             <p className="text-secondary-foreground/60 text-sm mt-1">
               Confecção & Estamparia • São Paulo, SP
@@ -41,7 +41,7 @@ const Footer = () => {
 
         <div className="border-t border-secondary-foreground/10 mt-8 pt-8 text-center">
           <p className="text-secondary-foreground/40 text-sm">
-            © {new Date().getFullYear()} Estilo Modas. Todos os direitos
+            © {new Date().getFullYear()} E.Estilo Modas. Todos os direitos
             reservados.
           </p>
         </div>

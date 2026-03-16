@@ -20,7 +20,7 @@ const Header = () => {
           href="#hero"
           className="font-display text-2xl tracking-wider text-primary"
         >
-          ESTILO MODAS
+          E.ESTILO MODAS
         </a>
 
         {/* Desktop nav */}

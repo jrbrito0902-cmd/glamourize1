@@ -1,14 +1,15 @@
-import { useState } from "react";
-import { ShoppingCart, Plus, Minus, X, ArrowRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ShoppingCart, Plus, Minus, X, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
+import { client, urlFor } from "@/lib/sanity";
 
 interface Product {
   id: string;
   name: string;
   price: number;
-  image: string;
+  image: any;
 }
 
 interface CartItem extends Product {
@@ -19,52 +20,41 @@ interface ProductCatalogProps {
   fullPage?: boolean;
 }
 
-const MOCK_PRODUCTS: Product[] = [
-  {
-    id: "1",
-    name: "Vestido Floral Summer",
-    price: 189.90,
-    image: "/src/assets/products/dress.png",
-  },
-  {
-    id: "2",
-    name: "Jaqueta Jeans Premium",
-    price: 249.90,
-    image: "/src/assets/products/jacket.png",
-  },
-  {
-    id: "3",
-    name: "Blusa Summer Minimal",
-    price: 89.90,
-    image: "/src/assets/products/blouse.png",
-  },
-  {
-    id: "4",
-    name: "Calça Alfaiataria Black",
-    price: 159.90,
-    image: "/src/assets/products/trousers.png",
-  },
-  // Simulando mais itens para a página completa
-  {
-    id: "5",
-    name: "Body Silk Touch",
-    price: 79.90,
-    image: "/src/assets/products/blouse.png",
-  },
-  {
-    id: "6",
-    name: "Shorts Denim Vintage",
-    price: 129.90,
-    image: "/src/assets/products/jacket.png",
-  },
-];
-
 const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { toast } = useToast();
 
-  const displayedProducts = fullPage ? MOCK_PRODUCTS : MOCK_PRODUCTS.slice(0, 4);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const query = `*[_type == "product"]{
+          "id": _id,
+          name,
+          price,
+          image,
+          description
+        }`;
+        const data = await client.fetch(query);
+        setProducts(data);
+      } catch (error) {
+        console.error("Erro ao buscar produtos:", error);
+        toast({
+          title: "Erro ao carregar catálogo",
+          description: "Não foi possível carregar os produtos do Sanity.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [toast]);
+
+  const displayedProducts = fullPage ? products : products.slice(0, 4);
 
   const addToCart = (product: Product) => {
     setCart((prev) => {
@@ -142,30 +132,46 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {displayedProducts.map((product) => (
-            <div key={product.id} className="group relative flex flex-col bg-muted/30 rounded-2xl overflow-hidden hover:shadow-card transition-all duration-300 border border-transparent hover:border-primary/20">
-              <div className="aspect-[3/4] overflow-hidden">
-                <img 
-                  src={product.image} 
-                  alt={product.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20 w-full col-span-full">
+            <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
+            <p className="text-muted-foreground animate-pulse">Carregando peças exclusivas...</p>
+          </div>
+        ) : displayedProducts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20 w-full col-span-full text-center">
+            <p className="text-xl text-muted-foreground mb-4">Nenhuma peça cadastrada ainda.</p>
+            {!fullPage && (
+              <Link to="/catalog">
+                <Button variant="outline">Ver catálogo completo</Button>
+              </Link>
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {displayedProducts.map((product) => (
+              <div key={product.id} className="group relative flex flex-col bg-muted/30 rounded-2xl overflow-hidden hover:shadow-card transition-all duration-300 border border-transparent hover:border-primary/20">
+                <div className="aspect-[3/4] overflow-hidden">
+                  <img 
+                    src={urlFor(product.image).width(400).url()} 
+                    alt={product.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+                <div className="p-6 flex flex-col flex-grow">
+                  <h3 className="text-xl font-display uppercase tracking-tight mb-2">{product.name}</h3>
+                  <p className="text-2xl font-bold text-primary mb-4">R$ {product.price.toFixed(2)}</p>
+                  <Button 
+                    onClick={() => addToCart(product)}
+                    className="mt-auto w-full group overflow-hidden"
+                  >
+                    <Plus className="mr-2 group-hover:rotate-90 transition-transform" size={18} />
+                    Adicionar ao Carrinho
+                  </Button>
+                </div>
               </div>
-              <div className="p-6 flex flex-col flex-grow">
-                <h3 className="text-xl font-display uppercase tracking-tight mb-2">{product.name}</h3>
-                <p className="text-2xl font-bold text-primary mb-4">R$ {product.price.toFixed(2)}</p>
-                <Button 
-                  onClick={() => addToCart(product)}
-                  className="mt-auto w-full group overflow-hidden"
-                >
-                  <Plus className="mr-2 group-hover:rotate-90 transition-transform" size={18} />
-                  Adicionar ao Carrinho
-                </Button>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {fullPage && (
           <div className="fixed bottom-8 right-8 z-[60]">
@@ -206,7 +212,7 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
                 cart.map((item) => (
                   <div key={item.id} className="flex gap-4 p-2 hover:bg-muted/30 rounded-xl transition-colors">
                     <div className="w-20 h-24 bg-muted rounded-lg overflow-hidden flex-shrink-0 border">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                      <img src={urlFor(item.image).width(100).url()} alt={item.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-grow">
                       <div className="flex justify-between items-start mb-1">
