@@ -36,7 +36,7 @@ const Footer = () => {
 
         <div className="border-t border-secondary-foreground/10 mt-8 pt-8 text-center">
           <p className="text-secondary-foreground/40 text-sm">
-            © {new Date().getFullYear()} Estilo Vip. Todos os direitos reservados.
+            © {new Date().getFullYear()} Estilo Modas. Todos os direitos reservados.
           </p>
         </div>
       </div>
