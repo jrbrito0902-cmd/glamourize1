@@ -9,9 +9,9 @@ const services = [
   },
   {
     icon: Palette,
-    title: "Roupa Personalizada",
+    title: "Coleções Exclusivas",
     description:
-      "Criamos peças exclusivas sob medida, respeitando seu estilo e necessidades. Design único para cada cliente.",
+      "Lançamentos semanais de peças exclusivas fabricadas por nós, garantindo que você tenha acesso às melhores tendências com qualidade premium.",
   },
   {
     icon: Shirt,

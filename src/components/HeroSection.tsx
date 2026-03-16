@@ -11,7 +11,7 @@ const HeroSection = () => {
       <div className="absolute inset-0">
         <img
           src={heroBg}
-          alt="Ateliê Estilo Modas"
+          alt="E.ESTILO MODAS"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-secondary/70" />
@@ -23,20 +23,19 @@ const HeroSection = () => {
             Confecção & Estamparia em São Paulo
           </p>
           <h1 className="heading-xl text-primary-foreground mb-6 leading-[0.95]">
-            Seu Estilo,
+            Expressando sua
             <br />
-            <span className="text-primary">Nossa Arte</span>
+            <span className="text-primary">Melhor Versão</span>
           </h1>
           <p className="text-primary-foreground/80 font-body text-lg md:text-xl mb-10 max-w-lg leading-relaxed">
-            Roupas exclusivas feitas sob medida. Da criação à estamparia,
-            transformamos suas ideias em peças únicas.
+            Especialistas em moda feminina com peças exclusivas, fabricação própria e estamparia profissional para o seu dia a dia.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button variant="hero" size="lg" asChild>
-              <a href="#contato">Solicite um Orçamento</a>
+              <a href="#catalogo">Conheça nossa Loja</a>
             </Button>
             <Button variant="heroOutline" size="lg" asChild>
-              <a href="#servicos">Nossos Serviços</a>
+              <a href="#contato">Fale Conosco</a>
             </Button>
           </div>
         </div>
