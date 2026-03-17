@@ -39,6 +39,21 @@ export default {
       name: "description",
       title: "Descrição",
       type: "text",
-    }
+    },
   ],
+  preview: {
+    select: {
+      title: "name",
+      media: "images.0",
+      price: "price",
+    },
+    prepare(selection: any) {
+      const { title, media, price } = selection;
+      return {
+        title: title,
+        media: media,
+        subtitle: `R$ ${price}`,
+      };
+    },
+  },
 };
