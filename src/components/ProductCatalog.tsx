@@ -122,7 +122,7 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
   };
 
   return (
-    <section id="catalogo" className={`section-padding ${fullPage ? "bg-background" : "bg-white"}`}>
+    <section id="catalogo" className={`section-padding ${fullPage ? "bg-background" : "bg-background"}`}>
       <div className="container mx-auto">
         {!fullPage && (
           <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 gap-6">

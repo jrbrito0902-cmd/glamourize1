@@ -24,7 +24,7 @@ const ProductCard = ({ product, onAction }: ProductCardProps) => {
 
   return (
     <div className="group relative flex flex-col bg-muted/30 rounded-2xl overflow-hidden hover:shadow-card transition-all duration-300 border border-transparent hover:border-primary/20 h-full">
-      <div className="aspect-[3/4] overflow-hidden relative bg-white flex items-center justify-center">
+      <div className="aspect-[3/4] overflow-hidden relative bg-background flex items-center justify-center">
         {/* Carousel Images */}
         {images.length > 0 && (
           <img
