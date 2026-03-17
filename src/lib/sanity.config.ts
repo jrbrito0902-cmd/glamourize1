@@ -8,6 +8,7 @@ export default defineConfig({
 
   projectId: "ov81cs59",
   dataset: "production",
+  apiVersion: "2024-03-01",
 
   basePath: "/admin",
 
