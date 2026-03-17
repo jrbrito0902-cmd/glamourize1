@@ -6,7 +6,7 @@ export default defineConfig({
   name: "default",
   title: "E.ESTILO MODAS Admin",
 
-  projectId: "ov81cs59",
+  projectId: "cw81es59",
   dataset: "production",
   apiVersion: "2024-03-01",
 
