@@ -17,17 +17,16 @@ const AboutSection = () => {
             <p className="text-primary font-body text-sm uppercase tracking-[0.3em] mb-3 font-medium">
               Quem somos
             </p>
-            <h2 className="heading-section mb-6">Sobre a Estilo Modas</h2>
+            <h2 className="heading-section mb-6">Sobre a E.Estilo Modas</h2>
             <p className="text-muted-foreground leading-relaxed mb-6">
-              Somos uma confecção localizada em São Paulo, SP, especializada em
-              criar roupas que expressam a identidade de cada cliente. Com
-              paixão pela moda e compromisso com a qualidade, transformamos
-              tecidos em peças de arte.
+              Somos uma confecção localizada em São Paulo, SP, focada em
+              criar peças que celebram a feminilidade e a autoestima de cada mulher. 
+              Com paixão pela moda e fabricação própria, garantimos qualidade em cada costura.
             </p>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              Da roupa personalizada à estamparia profissional, cada projeto é
-              tratado com dedicação e atenção aos mínimos detalhes. Nosso
-              objetivo é superar suas expectativas.
+              Das nossas coleções exclusivas à estamparia profissional, cada peça é
+              tratada com dedicação e atenção aos mínimos detalhes. Nosso
+              objetivo é que você se sinta única e poderosa.
             </p>
             <ul className="space-y-3">
               {highlights.map((item) => (
