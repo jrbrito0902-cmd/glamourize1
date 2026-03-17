@@ -44,14 +44,14 @@ export default {
   preview: {
     select: {
       title: "name",
-      media: "images.0",
+      images: "images",
       price: "price",
     },
     prepare(selection: any) {
-      const { title, media, price } = selection;
+      const { title, images, price } = selection;
       return {
         title: title,
-        media: media,
+        media: images && images.length > 0 ? images[0] : null,
         subtitle: `R$ ${price}`,
       };
     },

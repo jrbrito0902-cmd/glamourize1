@@ -23,14 +23,14 @@ const ProductCard = ({ product, onAction }: ProductCardProps) => {
   };
 
   return (
-    <div className="group relative flex flex-col bg-muted/30 rounded-2xl overflow-hidden hover:shadow-card transition-all duration-300 border border-transparent hover:border-primary/20">
+    <div className="group relative flex flex-col bg-muted/30 rounded-2xl overflow-hidden hover:shadow-card transition-all duration-300 border border-transparent hover:border-primary/20 h-full">
       <div className="aspect-[3/4] overflow-hidden relative bg-white flex items-center justify-center">
         {/* Carousel Images */}
         {images.length > 0 && (
           <img
-            src={urlFor(images[currentImageIndex]).width(400).url()}
+            src={urlFor(images[currentImageIndex]).width(600).url()}
             alt={product.name}
-            className="w-full h-full object-contain transition-all duration-500"
+            className="w-full h-full object-cover object-top transition-all duration-500"
           />
         )}
 
@@ -39,24 +39,24 @@ const ProductCard = ({ product, onAction }: ProductCardProps) => {
           <>
             <button
               onClick={prevImage}
-              className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-black/20 hover:bg-black/40 text-white rounded-full transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
+              className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full transition-all opacity-0 group-hover:opacity-100 backdrop-blur-md z-20"
             >
               <ChevronLeft size={20} />
             </button>
             <button
               onClick={nextImage}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-black/20 hover:bg-black/40 text-white rounded-full transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full transition-all opacity-0 group-hover:opacity-100 backdrop-blur-md z-20"
             >
               <ChevronRight size={20} />
             </button>
             
             {/* Dots indicator */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
               {images.map((_, idx) => (
                 <div 
                   key={idx}
                   className={`w-1.5 h-1.5 rounded-full transition-all ${
-                    idx === currentImageIndex ? "bg-primary w-4" : "bg-primary/30"
+                    idx === currentImageIndex ? "bg-white w-4" : "bg-white/50"
                   }`}
                 />
               ))}
@@ -65,14 +65,19 @@ const ProductCard = ({ product, onAction }: ProductCardProps) => {
         )}
 
         {product.discountPrice && (
-          <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg z-10">
+          <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg z-30">
             OFERTA
           </div>
         )}
       </div>
 
       <div className="p-6 flex flex-col flex-grow">
-        <h3 className="text-xl font-display uppercase tracking-tight mb-2">{product.name}</h3>
+        <div className="min-h-[64px] mb-2">
+          <h3 className="text-lg font-display uppercase tracking-tight line-clamp-2 leading-tight">
+            {product.name}
+          </h3>
+        </div>
+        
         <div className="mb-4">
           {product.discountPrice ? (
             <div className="flex flex-col">
