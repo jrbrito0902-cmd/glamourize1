@@ -29,13 +29,11 @@ export default {
       description: "Link direto da peça no Mercado Livre",
     },
     {
-      name: "image",
-      title: "Foto da Roupa",
-      type: "image",
-      options: {
-        hotspot: true,
-      },
-      validation: (Rule: any) => Rule.required(),
+      name: "images",
+      title: "Fotos da Roupa",
+      type: "array",
+      of: [{ type: "image", options: { hotspot: true } }],
+      validation: (Rule: any) => Rule.required().min(1),
     },
     {
       name: "description",

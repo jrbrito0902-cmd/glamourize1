@@ -4,13 +4,14 @@ import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import { client, urlFor } from "@/lib/sanity";
+import ProductCard from "./ProductCard";
 
 interface Product {
   id: string;
   name: string;
   price: number;
   discountPrice?: number;
-  image: any;
+  images: any[];
   mlLink?: string;
 }
 
@@ -39,7 +40,7 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
           name,
           price,
           discountPrice,
-          image,
+          images,
           mlLink,
           description
         }`;
@@ -168,49 +169,11 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {displayedProducts.map((product) => (
-              <div key={product.id} className="group relative flex flex-col bg-muted/30 rounded-2xl overflow-hidden hover:shadow-card transition-all duration-300 border border-transparent hover:border-primary/20">
-                <div className="aspect-[3/4] overflow-hidden relative bg-white flex items-center justify-center">
-                  <img 
-                    src={urlFor(product.image).width(400).url()} 
-                    alt={product.name}
-                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
-                  />
-                  {product.discountPrice && (
-                    <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
-                      OFERTA
-                    </div>
-                  )}
-                </div>
-                <div className="p-6 flex flex-col flex-grow">
-                  <h3 className="text-xl font-display uppercase tracking-tight mb-2">{product.name}</h3>
-                  <div className="mb-4">
-                    {product.discountPrice ? (
-                      <div className="flex flex-col">
-                        <span className="text-muted-foreground line-through text-sm">R$ {product.price.toFixed(2)}</span>
-                        <span className="text-2xl font-bold text-primary">R$ {product.discountPrice.toFixed(2)}</span>
-                      </div>
-                    ) : (
-                      <p className="text-2xl font-bold text-primary">R$ {product.price.toFixed(2)}</p>
-                    )}
-                  </div>
-                  <Button 
-                    onClick={() => handleProductAction(product)}
-                    className="mt-auto w-full group overflow-hidden bg-secondary hover:bg-secondary/90 text-white"
-                  >
-                    {product.mlLink ? (
-                      <>
-                        Comprar no Mercado Livre
-                        <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
-                      </>
-                    ) : (
-                      <>
-                        <Plus className="mr-2 group-hover:rotate-90 transition-transform" size={18} />
-                        Adicionar ao Carrinho
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </div>
+              <ProductCard 
+                key={product.id} 
+                product={product} 
+                onAction={handleProductAction} 
+              />
             ))}
           </div>
         )}
@@ -301,7 +264,7 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
                 cart.map((item) => (
                   <div key={item.id} className="flex gap-4 p-2 hover:bg-muted/30 rounded-xl transition-colors">
                     <div className="w-20 h-24 bg-muted rounded-lg overflow-hidden flex-shrink-0 border">
-                      <img src={urlFor(item.image).width(100).url()} alt={item.name} className="w-full h-full object-cover" />
+                      <img src={urlFor(item.images[0]).width(100).url()} alt={item.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-grow">
                       <div className="flex justify-between items-start mb-1">
