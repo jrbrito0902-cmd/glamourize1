@@ -1,17 +1,18 @@
 import { Instagram, Facebook } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
     <footer className="bg-secondary py-12">
-      <div className="container">
+      <div className="container px-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <a
-              href="#hero"
+            <Link
+              to="/"
               className="font-display text-3xl tracking-wider text-primary"
             >
               E.ESTILO MODAS
-            </a>
+            </Link>
             <p className="text-secondary-foreground/60 text-sm mt-1">
               Confecção & Estamparia • São Paulo, SP
             </p>
