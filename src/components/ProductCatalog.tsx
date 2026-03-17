@@ -115,7 +115,9 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
     if (product.mlLink) {
       window.open(product.mlLink, "_blank");
     } else {
-      addToCart(product);
+      const phone = "5511999999999";
+      const message = `Olá! Gostaria de consultar a disponibilidade do produto: *${product.name}*`;
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank");
     }
   };
 
@@ -137,6 +139,7 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
                 </Button>
               </Link>
               
+              {/* Botão de Carrinho (Comentado para foco no Mercado Livre)
               <button 
                 onClick={() => setIsCartOpen(true)}
                 className="relative p-3 bg-secondary text-white rounded-full hover:scale-105 transition-transform shadow-lg"
@@ -148,6 +151,7 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
                   </span>
                 )}
               </button>
+              */}
             </div>
           </div>
         )}
@@ -225,6 +229,7 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
           </div>
         )}
 
+        {/* Botão Flutuante de Carrinho (Comentado para foco no Mercado Livre)
         {fullPage && (
           <div className="fixed bottom-8 right-8 z-[60]">
              <button 
@@ -240,6 +245,7 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
               </button>
           </div>
         )}
+        */}
       </div>
 
       {/* Cart Drawer Overlay (mantido igual) */}

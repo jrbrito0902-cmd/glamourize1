@@ -1,6 +1,8 @@
 import { MessageCircle } from "lucide-react";
 
 const WhatsAppButton = () => {
+  return null; // Botão de WhatsApp desativado a pedido da cliente
+  /*
   return (
     <a
       href="https://wa.me/5511999999999?text=Olá! Gostaria de saber mais sobre os serviços da Estilo Modas."
@@ -12,6 +14,7 @@ const WhatsAppButton = () => {
       <MessageCircle className="w-7 h-7 text-primary-foreground" />
     </a>
   );
+  */
 };
 
 export default WhatsAppButton;

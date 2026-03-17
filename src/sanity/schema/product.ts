@@ -26,7 +26,8 @@ export default {
       name: "mlLink",
       title: "Link do Mercado Livre",
       type: "url",
-      description: "Link direto da peça no Mercado Livre",
+      description: "Link direto da peça no Mercado Livre (Obrigatório)",
+      validation: (Rule: any) => Rule.required(),
     },
     {
       name: "images",

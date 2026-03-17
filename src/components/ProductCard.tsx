@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Plus, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, MessageCircle, ArrowRight } from "lucide-react";
 import { Button } from "./ui/button";
 import { urlFor } from "@/lib/sanity";
 
@@ -92,17 +92,8 @@ const ProductCard = ({ product, onAction }: ProductCardProps) => {
           onClick={() => onAction(product)}
           className="mt-auto w-full group overflow-hidden bg-secondary hover:bg-secondary/90 text-white"
         >
-          {product.mlLink ? (
-            <>
-              Comprar no Mercado Livre
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
-            </>
-          ) : (
-            <>
-              <Plus className="mr-2 group-hover:rotate-90 transition-transform" size={18} />
-              Adicionar ao Carrinho
-            </>
-          )}
+          Comprar no Mercado Livre
+          <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
         </Button>
       </div>
     </div>
