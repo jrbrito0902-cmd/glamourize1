@@ -9,6 +9,7 @@ import ProductCard from "./ProductCard";
 interface Product {
   id: string;
   name: string;
+  category: string;
   price: number;
   discountPrice?: number;
   images: any[];
@@ -28,6 +29,7 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("Tudo");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
   const { toast } = useToast();
@@ -38,6 +40,7 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
         const query = `*[_type == "product"] | order(_createdAt desc){
           "id": _id,
           name,
+          category,
           price,
           discountPrice,
           images,
@@ -61,12 +64,18 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
     fetchProducts();
   }, [toast]);
 
-  const totalProducts = products.length;
+  const categories = ["Tudo", ...Array.from(new Set(products.map(p => p.category).filter(Boolean)))];
+
+  const filteredProducts = products.filter(product => 
+    selectedCategory === "Tudo" || product.category === selectedCategory
+  );
+
+  const totalProducts = filteredProducts.length;
   const totalPages = Math.ceil(totalProducts / itemsPerPage);
   
   const displayedProducts = fullPage 
-    ? products.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-    : products.slice(0, 4);
+    ? filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+    : filteredProducts.slice(0, 4);
 
   const addToCart = (product: Product) => {
     setCart((prev) => {
@@ -153,6 +162,27 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
               </button>
               */}
             </div>
+          </div>
+        )}
+
+        {fullPage && !loading && categories.length > 1 && (
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => {
+                  setSelectedCategory(cat);
+                  setCurrentPage(1);
+                }}
+                className={`px-6 py-2 rounded-full font-bold transition-all ${
+                  selectedCategory === cat
+                    ? "bg-primary text-white shadow-md border-primary"
+                    : "bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary border border-transparent"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
           </div>
         )}
 

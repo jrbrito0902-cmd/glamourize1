@@ -5,8 +5,15 @@ export default {
   fields: [
     {
       name: "name",
-      title: "Nome da Roupa",
+      title: "Nome do Produto",
       type: "string",
+      validation: (Rule: any) => Rule.required(),
+    },
+    {
+      name: "category",
+      title: "Categoria",
+      type: "string",
+      description: "Ex: Vestidos, Sapatos, Acessórios (Escreva para criar ou organizar)",
       validation: (Rule: any) => Rule.required(),
     },
     {
