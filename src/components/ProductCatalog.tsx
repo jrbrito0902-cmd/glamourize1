@@ -27,12 +27,14 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
   const { toast } = useToast();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const query = `*[_type == "product"]{
+        const query = `*[_type == "product"] | order(_createdAt desc){
           "id": _id,
           name,
           price,
@@ -58,7 +60,12 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
     fetchProducts();
   }, [toast]);
 
-  const displayedProducts = fullPage ? products : products.slice(0, 4);
+  const totalProducts = products.length;
+  const totalPages = Math.ceil(totalProducts / itemsPerPage);
+  
+  const displayedProducts = fullPage 
+    ? products.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+    : products.slice(0, 4);
 
   const addToCart = (product: Product) => {
     setCart((prev) => {
@@ -205,6 +212,53 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {fullPage && totalPages > 1 && (
+          <div className="mt-16 flex justify-center items-center gap-4">
+            <Button
+              variant="outline"
+              disabled={currentPage === 1}
+              onClick={() => {
+                setCurrentPage(prev => prev - 1);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="rounded-full h-12 w-12 p-0 flex items-center justify-center border-primary/20 hover:bg-primary/10 hover:text-primary transition-all disabled:opacity-30"
+            >
+              <ArrowRight size={20} className="rotate-180" />
+            </Button>
+            
+            <div className="flex gap-2">
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setCurrentPage(i + 1);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className={`w-10 h-10 rounded-full font-bold transition-all ${
+                    currentPage === i + 1 
+                      ? "bg-primary text-white shadow-lg" 
+                      : "bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+
+            <Button
+              variant="outline"
+              disabled={currentPage === totalPages}
+              onClick={() => {
+                setCurrentPage(prev => prev + 1);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="rounded-full h-12 w-12 p-0 flex items-center justify-center border-primary/20 hover:bg-primary/10 hover:text-primary transition-all disabled:opacity-30"
+            >
+              <ArrowRight size={20} />
+            </Button>
           </div>
         )}
 
