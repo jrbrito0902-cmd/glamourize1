@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import ProductCatalog from "@/components/ProductCatalog";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import SocialProof from "@/components/SocialProof";
 
 const CatalogPage = () => {
   return (
@@ -16,6 +17,7 @@ const CatalogPage = () => {
       <ProductCatalog fullPage={true} />
       <Footer />
       <WhatsAppButton />
+      <SocialProof />
     </div>
   );
 };

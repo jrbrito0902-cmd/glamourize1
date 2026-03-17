@@ -162,11 +162,11 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {displayedProducts.map((product) => (
               <div key={product.id} className="group relative flex flex-col bg-muted/30 rounded-2xl overflow-hidden hover:shadow-card transition-all duration-300 border border-transparent hover:border-primary/20">
-                <div className="aspect-[3/4] overflow-hidden relative">
+                <div className="aspect-[3/4] overflow-hidden relative bg-white flex items-center justify-center">
                   <img 
                     src={urlFor(product.image).width(400).url()} 
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                   />
                   {product.discountPrice && (
                     <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
