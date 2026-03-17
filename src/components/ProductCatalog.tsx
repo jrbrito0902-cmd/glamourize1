@@ -9,7 +9,9 @@ interface Product {
   id: string;
   name: string;
   price: number;
+  discountPrice?: number;
   image: any;
+  mlLink?: string;
 }
 
 interface CartItem extends Product {
@@ -34,7 +36,9 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
           "id": _id,
           name,
           price,
+          discountPrice,
           image,
+          mlLink,
           description
         }`;
         const data = await client.fetch(query);
@@ -88,15 +92,23 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
     );
   };
 
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = cart.reduce((sum, item) => sum + (item.discountPrice || item.price) * item.quantity, 0);
 
   const checkoutWhatsApp = () => {
     const phone = "5511999999999";
     const message = `Olá! Gostaria de fazer o pedido:\n\n${cart
-      .map((item) => `- ${item.quantity}x ${item.name} (R$ ${item.price.toFixed(2)})`)
+      .map((item) => `- ${item.quantity}x ${item.name} (R$ ${(item.discountPrice || item.price).toFixed(2)})`)
       .join("\n")}\n\n*Total: R$ ${total.toFixed(2)}*\n\nMeu CEP é: `;
     
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank");
+  };
+
+  const handleProductAction = (product: Product) => {
+    if (product.mlLink) {
+      window.open(product.mlLink, "_blank");
+    } else {
+      addToCart(product);
+    }
   };
 
   return (
@@ -150,22 +162,45 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {displayedProducts.map((product) => (
               <div key={product.id} className="group relative flex flex-col bg-muted/30 rounded-2xl overflow-hidden hover:shadow-card transition-all duration-300 border border-transparent hover:border-primary/20">
-                <div className="aspect-[3/4] overflow-hidden">
+                <div className="aspect-[3/4] overflow-hidden relative">
                   <img 
                     src={urlFor(product.image).width(400).url()} 
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
+                  {product.discountPrice && (
+                    <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                      OFERTA
+                    </div>
+                  )}
                 </div>
                 <div className="p-6 flex flex-col flex-grow">
                   <h3 className="text-xl font-display uppercase tracking-tight mb-2">{product.name}</h3>
-                  <p className="text-2xl font-bold text-primary mb-4">R$ {product.price.toFixed(2)}</p>
+                  <div className="mb-4">
+                    {product.discountPrice ? (
+                      <div className="flex flex-col">
+                        <span className="text-muted-foreground line-through text-sm">R$ {product.price.toFixed(2)}</span>
+                        <span className="text-2xl font-bold text-primary">R$ {product.discountPrice.toFixed(2)}</span>
+                      </div>
+                    ) : (
+                      <p className="text-2xl font-bold text-primary">R$ {product.price.toFixed(2)}</p>
+                    )}
+                  </div>
                   <Button 
-                    onClick={() => addToCart(product)}
-                    className="mt-auto w-full group overflow-hidden"
+                    onClick={() => handleProductAction(product)}
+                    className="mt-auto w-full group overflow-hidden bg-secondary hover:bg-secondary/90 text-white"
                   >
-                    <Plus className="mr-2 group-hover:rotate-90 transition-transform" size={18} />
-                    Adicionar ao Carrinho
+                    {product.mlLink ? (
+                      <>
+                        Comprar no Mercado Livre
+                        <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="mr-2 group-hover:rotate-90 transition-transform" size={18} />
+                        Adicionar ao Carrinho
+                      </>
+                    )}
                   </Button>
                 </div>
               </div>
@@ -221,7 +256,16 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
                           <X size={16} />
                         </button>
                       </div>
-                      <p className="text-primary font-bold mb-2 font-display text-xl">R$ {item.price.toFixed(2)}</p>
+                      <div className="mb-2">
+                        {item.discountPrice ? (
+                          <div className="flex gap-2 items-baseline">
+                            <span className="text-primary font-bold font-display text-xl">R$ {item.discountPrice.toFixed(2)}</span>
+                            <span className="text-muted-foreground line-through text-xs font-bold font-display">R$ {item.price.toFixed(2)}</span>
+                          </div>
+                        ) : (
+                          <p className="text-primary font-bold mb-2 font-display text-xl">R$ {item.price.toFixed(2)}</p>
+                        )}
+                      </div>
                       <div className="flex items-center gap-3">
                         <button onClick={() => updateQuantity(item.id, -1)} className="p-1 border rounded hover:bg-muted"><Minus size={14} /></button>
                         <span className="font-medium min-w-[20px] text-center">{item.quantity}</span>

@@ -11,9 +11,22 @@ export default {
     },
     {
       name: "price",
-      title: "Preço (R$)",
+      title: "Preço Original (R$)",
       type: "number",
       validation: (Rule: any) => Rule.required().min(0),
+    },
+    {
+      name: "discountPrice",
+      title: "Preço com Desconto (Opcional)",
+      type: "number",
+      description: "Se preenchido, o preço original aparecerá riscado.",
+      validation: (Rule: any) => Rule.min(0),
+    },
+    {
+      name: "mlLink",
+      title: "Link do Mercado Livre",
+      type: "url",
+      description: "Link direto da peça no Mercado Livre",
     },
     {
       name: "image",
