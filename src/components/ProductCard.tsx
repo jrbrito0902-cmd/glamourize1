@@ -1,15 +1,27 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, MessageCircle, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
 import { Button } from "./ui/button";
 import { urlFor } from "@/lib/sanity";
+import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductCardProps {
   product: any;
-  onAction: (product: any) => void;
+  onAction?: (product: any) => void;
 }
 
-const ProductCard = ({ product, onAction }: ProductCardProps) => {
+const ProductCard = ({ product }: ProductCardProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { addToCart } = useCart();
+  const { toast } = useToast();
+
+  const handleAddToCart = () => {
+    addToCart(product);
+    toast({
+      title: "Adicionado ao carrinho!",
+      description: `${product.name} foi adicionado ao seu carrinho.`,
+    });
+  };
   const images = product.images || [];
 
   const nextImage = (e: React.MouseEvent) => {
@@ -75,12 +87,13 @@ const ProductCard = ({ product, onAction }: ProductCardProps) => {
           )}
         </div>
         
-        <button
-          onClick={() => onAction(product)}
-          className="w-full py-3 bg-black text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-black/80 transition-all duration-300 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0"
+        <Button
+          onClick={handleAddToCart}
+          className="mt-auto w-full group overflow-hidden bg-secondary hover:bg-secondary/90 text-white"
         >
-          {product.mlLink ? "Comprar no Mercado Livre" : "Consultar Consultora"}
-        </button>
+          <ShoppingCart className="mr-2 group-hover:scale-110 transition-transform" size={18} />
+          Adicionar ao Carrinho
+        </Button>
       </div>
     </div>
   );
