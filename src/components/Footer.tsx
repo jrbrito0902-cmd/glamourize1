@@ -20,7 +20,7 @@ const Footer = () => {
 
           <div className="flex items-center gap-8">
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/estilomodas.vip/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-foreground/40 hover:text-black transition-colors"

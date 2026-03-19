@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Instagram } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const navLinks = [
@@ -40,32 +40,57 @@ const Header = () => {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-10">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              to={link.href}
-              onClick={(e) => handleLinkClick(e, link.href)}
-              className="text-foreground/70 hover:text-primary transition-all duration-300 text-[11px] font-semibold uppercase tracking-[0.2em]"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="hidden md:flex items-center gap-10">
+          <nav className="flex items-center gap-10">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                to={link.href}
+                onClick={(e) => handleLinkClick(e, link.href)}
+                className="text-foreground/70 hover:text-primary transition-all duration-300 text-[11px] font-semibold uppercase tracking-[0.2em]"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          
+          <div className="h-4 w-[1px] bg-black/10 mx-2" />
+          
+          <a
+            href="https://www.instagram.com/estilomodas.vip/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground/70 hover:text-primary transition-colors"
+            aria-label="Instagram"
+          >
+            <Instagram size={18} strokeWidth={1.5} />
+          </a>
+        </div>
 
         {/* Mobile toggle */}
-        <button
-          onClick={() => setOpen(!open)}
-          className="md:hidden text-primary"
-          aria-label="Menu"
-        >
-          {open ? <X size={20} /> : <Menu size={20} />}
-        </button>
+        <div className="flex md:hidden items-center gap-4">
+          <a
+            href="https://www.instagram.com/estilomodas.vip/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary"
+            aria-label="Instagram"
+          >
+            <Instagram size={18} strokeWidth={1.5} />
+          </a>
+          <button
+            onClick={() => setOpen(!open)}
+            className="text-primary"
+            aria-label="Menu"
+          >
+            {open ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
       {open && (
-        <nav className="md:hidden bg-white border-t border-black/5 pb-8 animate-fade-down">
+        <nav className="md:hidden bg-white border-t border-black/5 pb-12 animate-fade-down">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -79,6 +104,17 @@ const Header = () => {
               {link.label}
             </Link>
           ))}
+          <div className="px-8 mt-4 pt-6 border-t border-black/5">
+             <a
+              href="https://www.instagram.com/estilomodas.vip/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 text-foreground/70 hover:text-primary transition-colors text-[11px] font-semibold uppercase tracking-[0.2em]"
+            >
+              <Instagram size={18} strokeWidth={1.5} />
+              Instagram
+            </a>
+          </div>
         </nav>
       )}
     </header>
