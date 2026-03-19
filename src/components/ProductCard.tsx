@@ -89,7 +89,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         
         <Button
           onClick={handleAddToCart}
-          className="mt-auto w-full group overflow-hidden bg-secondary hover:bg-secondary/90 text-white"
+          className="mt-auto w-full group overflow-hidden bg-black hover:bg-black/80 text-white"
         >
           <ShoppingCart className="mr-2 group-hover:scale-110 transition-transform" size={18} />
           Adicionar ao Carrinho
