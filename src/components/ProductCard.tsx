@@ -71,19 +71,19 @@ const ProductCard = ({ product }: ProductCardProps) => {
         )}
       </div>
 
-      <div className="py-6 px-2 flex flex-col items-center text-center flex-grow">
-        <h3 className="text-[13px] font-body uppercase tracking-[0.15em] mb-2 text-foreground/80 line-clamp-1">
+      <div className="py-5 px-3 flex flex-col items-center text-center flex-grow">
+        <h3 className="text-sm font-bold uppercase tracking-wider mb-2 text-foreground line-clamp-2 leading-snug min-h-[2.5rem]">
           {product.name}
         </h3>
         
         <div className="mb-4">
           {product.discountPrice ? (
-            <div className="flex gap-3 items-center">
-              <span className="text-muted-foreground line-through text-xs font-light font-body italic">R$ {product.price.toFixed(2)}</span>
-              <span className="text-md font-semibold text-primary font-body tracking-wider italic">R$ {product.discountPrice.toFixed(2)}</span>
+            <div className="flex gap-2 items-center justify-center">
+              <span className="text-muted-foreground line-through text-xs">R$ {product.price.toFixed(2)}</span>
+              <span className="text-base font-bold text-primary">R$ {product.discountPrice.toFixed(2)}</span>
             </div>
           ) : (
-            <p className="text-md font-semibold text-primary font-body tracking-wider italic">R$ {product.price.toFixed(2)}</p>
+            <p className="text-base font-bold text-primary">R$ {product.price.toFixed(2)}</p>
           )}
         </div>
         
