@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { urlFor } from "@/lib/sanity";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
+import { Link } from "react-router-dom";
 
 interface ProductCardProps {
   product: any;
@@ -36,15 +37,16 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   return (
     <div className="group relative flex flex-col bg-white overflow-hidden transition-all duration-500 h-full">
-      <div className="aspect-[3/4] overflow-hidden relative bg-secondary flex items-center justify-center">
-        {/* Carousel Images */}
-        {images.length > 0 && (
-          <img
-            src={urlFor(images[currentImageIndex]).width(600).url()}
-            alt={product.name}
-            className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
-          />
-        )}
+      <Link to={`/produto/${product.id}`} className="block">
+        <div className="aspect-[3/4] overflow-hidden relative bg-secondary flex items-center justify-center cursor-pointer">
+          {/* Carousel Images */}
+          {images.length > 0 && (
+            <img
+              src={urlFor(images[currentImageIndex]).width(600).url()}
+              alt={product.name}
+              className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
+            />
+          )}
 
         {/* Navigation Arrows */}
         {images.length > 1 && (
@@ -64,17 +66,20 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </>
         )}
 
-        {product.discountPrice && (
-          <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 text-[10px] font-bold tracking-[0.2em] uppercase z-30">
-            Oferta
-          </div>
-        )}
-      </div>
+          {product.discountPrice && (
+            <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 text-[10px] font-bold tracking-[0.2em] uppercase z-30">
+              Oferta
+            </div>
+          )}
+        </div>
+      </Link>
 
       <div className="py-5 px-3 flex flex-col items-center text-center flex-grow">
-        <h3 className="text-sm font-bold uppercase tracking-wider mb-2 text-foreground line-clamp-2 leading-snug min-h-[2.5rem]">
-          {product.name}
-        </h3>
+        <Link to={`/produto/${product.id}`} className="block w-full mb-2 hover:text-primary/80 transition-colors">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-foreground line-clamp-2 leading-snug min-h-[2.5rem]">
+            {product.name}
+          </h3>
+        </Link>
         
         <div className="mb-4">
           {product.discountPrice ? (

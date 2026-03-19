@@ -22,12 +22,16 @@ interface CartContextType {
   clearCart: () => void;
   total: number;
   totalItems: number;
+  isCartOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const addToCart = (product: CartProduct) => {
     setCart((prev) => {
@@ -58,6 +62,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const clearCart = () => setCart([]);
+  const openCart = () => setIsCartOpen(true);
+  const closeCart = () => setIsCartOpen(false);
 
   const total = cart.reduce(
     (sum, item) => sum + (item.discountPrice || item.price) * item.quantity,
@@ -68,7 +74,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, total, totalItems }}
+      value={{
+        cart, addToCart, removeFromCart, updateQuantity, clearCart,
+        total, totalItems, isCartOpen, openCart, closeCart,
+      }}
     >
       {children}
     </CartContext.Provider>
@@ -80,3 +89,4 @@ export const useCart = () => {
   if (!ctx) throw new Error("useCart deve ser usado dentro de CartProvider");
   return ctx;
 };
+

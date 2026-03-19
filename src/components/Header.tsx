@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Menu, X, Instagram } from "lucide-react";
+import { Menu, X, Instagram, ShoppingCart } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
 
 const navLinks = [
   { label: "Início", href: "/" },
@@ -15,6 +16,7 @@ const Header = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === "/";
+  const { totalItems, openCart } = useCart();
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (isHome && href.startsWith("/#")) {
@@ -65,10 +67,24 @@ const Header = () => {
           >
             <Instagram size={18} strokeWidth={1.5} />
           </a>
+
+          {/* Carrinho */}
+          <button
+            onClick={openCart}
+            aria-label="Abrir carrinho"
+            className="relative p-2 hover:text-primary transition-colors"
+          >
+            <ShoppingCart size={20} strokeWidth={1.5} />
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -right-1 bg-black text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
+          </button>
         </div>
 
         {/* Mobile toggle */}
-        <div className="flex md:hidden items-center gap-4">
+        <div className="flex md:hidden items-center gap-3">
           <a
             href="https://www.instagram.com/estilomodas.vip/"
             target="_blank"
@@ -78,6 +94,19 @@ const Header = () => {
           >
             <Instagram size={18} strokeWidth={1.5} />
           </a>
+          {/* Carrinho mobile */}
+          <button
+            onClick={openCart}
+            aria-label="Abrir carrinho"
+            className="relative p-1 text-primary"
+          >
+            <ShoppingCart size={20} strokeWidth={1.5} />
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -right-1 bg-black text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
+          </button>
           <button
             onClick={() => setOpen(!open)}
             className="text-primary"
