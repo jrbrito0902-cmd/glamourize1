@@ -22,30 +22,29 @@ const TestimonialsSection = () => {
   return (
     <section id="depoimentos" className="section-padding bg-secondary">
       <div className="container">
-        <div className="text-center mb-16">
-          <p className="text-primary font-body text-sm uppercase tracking-[0.3em] mb-3 font-medium">
-            Depoimentos
+        <div className="text-center mb-24">
+          <p className="text-foreground/40 font-body text-[10px] uppercase tracking-[0.5em] mb-4 font-semibold">
+            Social Proof
           </p>
-          <h2 className="font-display text-3xl md:text-4xl tracking-wide uppercase text-secondary-foreground">
-            O Que Nossos Clientes Dizem
-          </h2>
+          <h2 className="heading-lg italic">O que dizem nossas clientes</h2>
+          <div className="w-12 h-[1px] bg-black/20 mx-auto mt-6" />
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-12">
           {testimonials.map((t) => (
             <div
               key={t.name}
-              className="bg-secondary-foreground/5 rounded-lg p-8 border border-secondary-foreground/10"
+              className="flex flex-col items-center text-center p-4"
             >
-              <div className="flex gap-1 mb-4">
+              <div className="flex gap-1 mb-6 opacity-30">
                 {Array.from({ length: t.rating }).map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-primary text-primary" />
+                  <Star key={i} className="w-3 h-3 fill-black text-black" />
                 ))}
               </div>
-              <p className="text-secondary-foreground/80 leading-relaxed mb-6 italic">
+              <p className="text-foreground/70 leading-loose mb-8 italic text-md font-display tracking-wide">
                 "{t.text}"
               </p>
-              <p className="font-display text-xl tracking-wider text-primary">
+              <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-black">
                 {t.name}
               </p>
             </div>

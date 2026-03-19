@@ -23,28 +23,29 @@ const services = [
 
 const ServicesSection = () => {
   return (
-    <section id="servicos" className="section-padding bg-muted">
-      <div className="container">
-        <div className="text-center mb-16">
-          <p className="text-primary font-body text-sm uppercase tracking-[0.3em] mb-3 font-medium">
-            O que fazemos
+    <section id="servicos" className="section-padding bg-white">
+      <div className="container overflow-hidden">
+        <div className="text-center mb-24">
+          <p className="text-foreground/40 font-body text-[10px] uppercase tracking-[0.5em] mb-4 font-semibold">
+            Expertise
           </p>
-          <h2 className="heading-section">Nossos Serviços</h2>
+          <h2 className="heading-lg italic">Nossa Excelência</h2>
+          <div className="w-12 h-[1px] bg-black/20 mx-auto mt-6" />
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-16">
           {services.map((service) => (
             <div
               key={service.title}
-              className="bg-card rounded-lg p-8 shadow-card hover:shadow-elevated transition-shadow duration-300 group"
+              className="flex flex-col items-center text-center group"
             >
-              <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary transition-colors duration-300">
-                <service.icon className="w-7 h-7 text-primary group-hover:text-primary-foreground transition-colors duration-300" />
+              <div className="w-16 h-16 flex items-center justify-center mb-10 group-hover:bg-black group-hover:text-white transition-all duration-500">
+                <service.icon className="w-6 h-6 stroke-[1.2px]" />
               </div>
-              <h3 className="font-display text-2xl tracking-wide text-secondary mb-3">
+              <h3 className="font-display text-2xl tracking-tight mb-4 italic">
                 {service.title}
               </h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-foreground/60 text-sm leading-relaxed tracking-wide max-w-xs">
                 {service.description}
               </p>
             </div>

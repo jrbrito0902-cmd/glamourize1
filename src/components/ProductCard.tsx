@@ -23,14 +23,14 @@ const ProductCard = ({ product, onAction }: ProductCardProps) => {
   };
 
   return (
-    <div className="group relative flex flex-col bg-muted/30 rounded-2xl overflow-hidden hover:shadow-card transition-all duration-300 border border-transparent hover:border-primary/20 h-full">
-      <div className="aspect-[3/4] overflow-hidden relative bg-background flex items-center justify-center">
+    <div className="group relative flex flex-col bg-white overflow-hidden transition-all duration-500 h-full">
+      <div className="aspect-[3/4] overflow-hidden relative bg-secondary flex items-center justify-center">
         {/* Carousel Images */}
         {images.length > 0 && (
           <img
             src={urlFor(images[currentImageIndex]).width(600).url()}
             alt={product.name}
-            className="w-full h-full object-cover object-top transition-all duration-500"
+            className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
           />
         )}
 
@@ -39,62 +39,48 @@ const ProductCard = ({ product, onAction }: ProductCardProps) => {
           <>
             <button
               onClick={prevImage}
-              className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full transition-all opacity-0 group-hover:opacity-100 backdrop-blur-md z-20"
+              className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-white/80 hover:bg-white text-black rounded-full transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm z-20"
             >
-              <ChevronLeft size={20} />
+              <ChevronLeft size={16} />
             </button>
             <button
               onClick={nextImage}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full transition-all opacity-0 group-hover:opacity-100 backdrop-blur-md z-20"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-white/80 hover:bg-white text-black rounded-full transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm z-20"
             >
-              <ChevronRight size={20} />
+              <ChevronRight size={16} />
             </button>
-            
-            {/* Dots indicator */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
-              {images.map((_, idx) => (
-                <div 
-                  key={idx}
-                  className={`w-1.5 h-1.5 rounded-full transition-all ${
-                    idx === currentImageIndex ? "bg-white w-4" : "bg-white/50"
-                  }`}
-                />
-              ))}
-            </div>
           </>
         )}
 
         {product.discountPrice && (
-          <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg z-30">
-            OFERTA
+          <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 text-[10px] font-bold tracking-[0.2em] uppercase z-30">
+            Oferta
           </div>
         )}
       </div>
 
-      <div className="p-6 flex flex-col flex-grow">
-        <div className="min-h-[64px] mb-2">
-          <h3 className="text-lg font-display uppercase tracking-tight line-clamp-2 leading-tight">
-            {product.name}
-          </h3>
-        </div>
+      <div className="py-6 px-2 flex flex-col items-center text-center flex-grow">
+        <h3 className="text-[13px] font-body uppercase tracking-[0.15em] mb-2 text-foreground/80 line-clamp-1">
+          {product.name}
+        </h3>
         
         <div className="mb-4">
           {product.discountPrice ? (
-            <div className="flex flex-col">
-              <span className="text-muted-foreground line-through text-sm">R$ {product.price.toFixed(2)}</span>
-              <span className="text-2xl font-bold text-primary">R$ {product.discountPrice.toFixed(2)}</span>
+            <div className="flex gap-3 items-center">
+              <span className="text-muted-foreground line-through text-xs font-light font-body italic">R$ {product.price.toFixed(2)}</span>
+              <span className="text-md font-semibold text-primary font-body tracking-wider italic">R$ {product.discountPrice.toFixed(2)}</span>
             </div>
           ) : (
-            <p className="text-2xl font-bold text-primary">R$ {product.price.toFixed(2)}</p>
+            <p className="text-md font-semibold text-primary font-body tracking-wider italic">R$ {product.price.toFixed(2)}</p>
           )}
         </div>
-        <Button
+        
+        <button
           onClick={() => onAction(product)}
-          className="mt-auto w-full group overflow-hidden bg-secondary hover:bg-secondary/90 text-white"
+          className="w-full py-3 bg-black text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-black/80 transition-all duration-300 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0"
         >
-          Comprar no Mercado Livre
-          <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
-        </Button>
+          {product.mlLink ? "Comprar no Mercado Livre" : "Consultar Consultora"}
+        </button>
       </div>
     </div>
   );

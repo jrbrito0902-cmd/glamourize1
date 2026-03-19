@@ -29,24 +29,24 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-secondary/95 backdrop-blur-sm">
-      <div className="container flex items-center justify-between h-16 px-4">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-black/5">
+      <div className="container flex items-center justify-between h-20 px-6 md:px-12">
         <Link
           to="/"
-          className="font-display text-2xl tracking-wider text-primary"
+          className="font-display text-2xl tracking-tight text-primary font-semibold italic"
           onClick={() => setOpen(false)}
         >
-          E.ESTILO MODAS
+          Estilo Modas
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-10">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               to={link.href}
               onClick={(e) => handleLinkClick(e, link.href)}
-              className="text-secondary-foreground/80 hover:text-primary transition-colors text-sm font-medium uppercase tracking-wider"
+              className="text-foreground/70 hover:text-primary transition-all duration-300 text-[11px] font-semibold uppercase tracking-[0.2em]"
             >
               {link.label}
             </Link>
@@ -56,16 +56,16 @@ const Header = () => {
         {/* Mobile toggle */}
         <button
           onClick={() => setOpen(!open)}
-          className="md:hidden text-secondary-foreground"
+          className="md:hidden text-primary"
           aria-label="Menu"
         >
-          {open ? <X size={24} /> : <Menu size={24} />}
+          {open ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
       {/* Mobile menu */}
       {open && (
-        <nav className="md:hidden bg-secondary border-t border-secondary-foreground/10 pb-4">
+        <nav className="md:hidden bg-white border-t border-black/5 pb-8 animate-fade-down">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -74,7 +74,7 @@ const Header = () => {
                 handleLinkClick(e, link.href);
                 setOpen(false);
               }}
-              className="block px-6 py-3 text-secondary-foreground/80 hover:text-primary transition-colors text-sm uppercase tracking-wider"
+              className="block px-8 py-4 text-foreground/70 hover:text-primary transition-colors text-[11px] font-semibold uppercase tracking-[0.2em]"
             >
               {link.label}
             </Link>

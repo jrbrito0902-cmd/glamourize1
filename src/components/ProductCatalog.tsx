@@ -126,42 +126,22 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
     } else {
       const phone = "5511999999999";
       const message = `Olá! Gostaria de consultar a disponibilidade do produto: *${product.name}*`;
-      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank");
     }
   };
 
   return (
-    <section id="catalogo" className={`section-padding ${fullPage ? "bg-background" : "bg-background"}`}>
+    <section id="catalogo" className={`section-padding bg-white`}>
       <div className="container mx-auto">
         {!fullPage && (
-          <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 gap-6">
-            <div>
-              <h2 className="heading-section mb-2 text-center md:text-left">Destaques da Coleção</h2>
-              <p className="text-muted-foreground text-lg text-center md:text-left">Confira nossas peças mais queridas.</p>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <Link to="/catalog">
-                <Button className="bg-primary hover:bg-primary/90 text-white font-bold h-12 px-8 rounded-full shadow-lg hover:scale-105 transition-all flex items-center gap-2">
-                  VER CATÁLOGO COMPLETO
-                  <ArrowRight size={20} />
-                </Button>
-              </Link>
-              
-              {/* Botão de Carrinho (Comentado para foco no Mercado Livre)
-              <button 
-                onClick={() => setIsCartOpen(true)}
-                className="relative p-3 bg-secondary text-white rounded-full hover:scale-105 transition-transform shadow-lg"
-              >
-                <ShoppingCart size={24} />
-                {cart.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-primary text-white text-xs w-6 h-6 rounded-full flex items-center justify-center font-bold">
-                    {cart.reduce((s, i) => s + i.quantity, 0)}
-                  </span>
-                )}
-              </button>
-              */}
-            </div>
+          <div className="flex flex-col items-center mb-16 gap-6 text-center">
+            <h2 className="text-[10px] uppercase tracking-[0.6em] text-foreground/60 mb-2">Coleção</h2>
+            <h3 className="heading-lg italic font-medium">Destaques da Temporada</h3>
+            <div className="w-12 h-[1px] bg-black/20 my-4" />
+            <Link to="/catalog">
+              <span className="text-[11px] font-bold uppercase tracking-[0.2em] border-b border-black pb-1 hover:text-black/60 hover:border-black/60 transition-all cursor-pointer">
+                Ver Catálogo Completo
+              </span>
+            </Link>
           </div>
         )}
 
