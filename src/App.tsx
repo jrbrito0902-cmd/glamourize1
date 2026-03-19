@@ -32,7 +32,7 @@ const App = () => (
             <Route path="/produto/:id" element={<ProductDetail />} />
             <Route path="/pedido-confirmado" element={<OrderConfirmation />} />
             <Route path="/admin/*" element={<Admin />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALLs "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
