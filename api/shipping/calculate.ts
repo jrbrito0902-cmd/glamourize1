@@ -16,11 +16,12 @@ export default async function handler(req: any, res: any) {
 
   const totalQuantity = (items || []).reduce((acc: number, item: any) => acc + (item.quantity || 1), 0) || 1;
   
-  // Estimativa para roupas: ~300g por peça, caixa 20x20cm com altura proporcional
-  const weight = Math.max(0.3, totalQuantity * 0.3); // kg
-  const height = Math.min(105, Math.max(4, totalQuantity * 5)); // cm
-  const width = 20; // cm
-  const length = 20; // cm
+  // Padrão: 500g por peça em envelope bolha (inclui margem de segurança)
+  const WEIGHT_PER_ITEM_KG = 0.5;
+  const weight = totalQuantity * WEIGHT_PER_ITEM_KG; // kg
+  const height = 3;  // cm (espessura do envelope bolha)
+  const width = 20;  // cm
+  const length = 30; // cm
 
   const token = process.env.MELHOR_ENVIO_TOKEN;
   const cepOrigem = process.env.MELHOR_ENVIO_POSTAL_CODE || '01001000';
