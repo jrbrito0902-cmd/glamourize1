@@ -11,6 +11,13 @@ export const client = createClient({
 const builder = imageUrlBuilder(client);
 
 export const urlFor = (source: any) => {
-  if (!source) return { width: () => ({ url: () => "" }) };
-  return builder.image(source);
+  if (!source || !source.asset) {
+    return { width: () => ({ url: () => "" }) };
+  }
+  try {
+    return builder.image(source);
+  } catch (error) {
+    console.error("Erro ao gerar URL da imagem do Sanity:", error);
+    return { width: () => ({ url: () => "" }) };
+  }
 };
