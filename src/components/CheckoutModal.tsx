@@ -14,7 +14,7 @@ type Step = "form" | "loading" | "payment" | "success" | "pending" | "error";
 const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
   const { cart, total, grandTotal, selectedShipping, clearCart, destinationCep } = useCart();
   const [step, setStep] = useState<Step>("form");
-  const [form, setForm] = useState({ name: "", email: "", cpf: "" });
+  const [form, setForm] = useState({ name: "", email: "", cpf: "", phone: "" });
   const [errors, setErrors] = useState<Partial<typeof form>>({});
   const [apiError, setApiError] = useState<string | null>(null);
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
@@ -84,6 +84,8 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
       errs.email = "E-mail inválido";
     if (!form.cpf.trim() || form.cpf.replace(/\D/g, "").length !== 11)
       errs.cpf = "CPF inválido (11 dígitos)";
+    if (!form.phone.trim() || form.phone.replace(/\D/g, "").length < 10)
+      errs.phone = "Telefone inválido";
     setErrors(errs);
 
     const addrErrs: Partial<typeof address> = {};
@@ -220,6 +222,14 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
       .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
   };
 
+  const formatPhone = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 11);
+    if (digits.length <= 10) {
+      return digits.replace(/^(\d{2})(\d)/g, "($1) $2").replace(/(\d{4})(\d)/g, "$1-$2");
+    }
+    return digits.replace(/^(\d{2})(\d)/g, "($1) $2").replace(/(\d{5})(\d)/g, "$1-$2");
+  };
+
   const headerTitle = {
     form: "Seus Dados",
     loading: "Preparando...",
@@ -346,6 +356,20 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
                     }`}
                   />
                   {errors.cpf && <p className="text-red-500 text-[11px] mt-0.5">{errors.cpf}</p>}
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold mb-1 text-slate-700">Telefone / WhatsApp</label>
+                  <input
+                    type="text"
+                    value={form.phone}
+                    onChange={(e) => setForm((f) => ({ ...f, phone: formatPhone(e.target.value) }))}
+                    placeholder="(11) 99999-9999"
+                    maxLength={15}
+                    className={`w-full border rounded-lg px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-black/20 transition-all ${
+                      errors.phone ? "border-red-400 bg-red-50" : "border-slate-300"
+                    }`}
+                  />
+                  {errors.phone && <p className="text-red-500 text-[11px] mt-0.5">{errors.phone}</p>}
                 </div>
 
                 {/* Endereço de Entrega */}
