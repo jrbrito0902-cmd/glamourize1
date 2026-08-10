@@ -29,12 +29,7 @@ export default {
       description: "Se preenchido, o preço original aparecerá riscado.",
       validation: (Rule: any) => Rule.min(0),
     },
-    {
-      name: "mlLink",
-      title: "Link do Mercado Livre (Opcional)",
-      type: "url",
-      description: "Link direto da peça no Mercado Livre se houver.",
-    },
+
     {
       name: "stock",
       title: "Quantidade em Estoque",

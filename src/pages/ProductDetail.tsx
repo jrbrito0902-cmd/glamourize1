@@ -17,7 +17,6 @@ interface Product {
   discountPrice?: number;
   images: any[];
   description?: string;
-  mlLink?: string;
   stock?: number;
   sizes?: string[];
 }
@@ -42,7 +41,7 @@ const ProductDetail = () => {
       try {
         const query = `*[_type == "product" && _id == $id][0]{
           "id": _id,
-          name, category, price, discountPrice, images, description, mlLink, stock, sizes
+          name, category, price, discountPrice, images, description, stock, sizes
         }`;
         const data = await client.fetch(query, { id });
         setProduct(data);
@@ -54,7 +53,7 @@ const ProductDetail = () => {
         if (data?.category) {
           const relQuery = `*[_type == "product" && category == $category && _id != $id] | order(_createdAt desc)[0...6]{
             "id": _id,
-            name, category, price, discountPrice, images, mlLink, stock, sizes
+            name, category, price, discountPrice, images, stock, sizes
           }`;
           const relData = await client.fetch(relQuery, { category: data.category, id });
           setRelated(relData);

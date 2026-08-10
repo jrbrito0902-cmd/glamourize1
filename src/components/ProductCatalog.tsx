@@ -14,7 +14,6 @@ interface Product {
   price: number;
   discountPrice?: number;
   images: any[];
-  mlLink?: string;
 }
 
 interface ProductCatalogProps {
@@ -40,7 +39,6 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
           price,
           discountPrice,
           images,
-          mlLink,
           description,
           stock,
           sizes

@@ -105,6 +105,10 @@ export default async function handler(req: any, res: any) {
         }
       }));
 
+    if (validOptions.length === 0) {
+      throw new Error('Nenhuma opção de frete válida disponível');
+    }
+
     return res.status(200).json({ options: validOptions });
   } catch (err: any) {
     console.error('Erro ao calcular frete:', err);

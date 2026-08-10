@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 export interface CartProduct {
   id: string;
@@ -7,7 +8,6 @@ export interface CartProduct {
   discountPrice?: number;
   images: any[];
   category?: string;
-  mlLink?: string;
   size?: string;
   color?: string;
 }
@@ -48,6 +48,7 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
+  const { toast } = useToast();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -68,8 +69,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setCart((prev) => {
       const existing = prev.find((item) => item.id === itemId);
       if (existing) {
+        const nextQty = existing.quantity + 1;
+        if (existing.stock !== undefined && nextQty > existing.stock) {
+          // Exibe toast notificando limite atingido
+          toast({
+            title: "Limite de estoque atingido",
+            description: `Só temos ${existing.stock} unidades deste produto disponíveis no estoque.`,
+            variant: "destructive",
+          });
+          return prev;
+        }
         return prev.map((item) =>
-          item.id === itemId ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === itemId ? { ...item, quantity: nextQty } : item
         );
       }
       return [
@@ -96,6 +107,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       prev.map((item) => {
         if (item.id === cartItemId) {
           const newQty = Math.max(1, item.quantity + delta);
+          if (item.stock !== undefined && newQty > item.stock) {
+            toast({
+              title: "Limite de estoque atingido",
+              description: `Só temos ${item.stock} unidades deste produto em estoque.`,
+              variant: "destructive",
+            });
+            return item;
+          }
           return { ...item, quantity: newQty };
         }
         return item;
