@@ -16,11 +16,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
 
+  const isOutOfStock = product.stock !== undefined && product.stock <= 0;
+  const defaultSize = product.sizes && product.sizes.length > 0 ? product.sizes[0] : "M";
+
   const handleAddToCart = () => {
-    addToCart(product);
+    if (isOutOfStock) return;
+    addToCart(product, { size: defaultSize });
     toast({
       title: "Adicionado ao carrinho!",
-      description: `${product.name} foi adicionado ao seu carrinho.`,
+      description: `${product.name} (Tam: ${defaultSize}) foi adicionado ao seu carrinho.`,
     });
   };
   const images = product.images || [];
@@ -48,23 +52,32 @@ const ProductCard = ({ product }: ProductCardProps) => {
             />
           )}
 
-        {/* Navigation Arrows */}
-        {images.length > 1 && (
-          <>
-            <button
-              onClick={prevImage}
-              className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-white/80 hover:bg-white text-black rounded-full transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm z-20"
-            >
-              <ChevronLeft size={16} />
-            </button>
-            <button
-              onClick={nextImage}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-white/80 hover:bg-white text-black rounded-full transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm z-20"
-            >
-              <ChevronRight size={16} />
-            </button>
-          </>
-        )}
+          {/* Out of stock badge */}
+          {isOutOfStock && (
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] flex items-center justify-center z-30">
+              <span className="bg-red-600 text-white text-xs font-bold px-3 py-1.5 uppercase tracking-widest">
+                Esgotado
+              </span>
+            </div>
+          )}
+
+          {/* Navigation Arrows */}
+          {images.length > 1 && !isOutOfStock && (
+            <>
+              <button
+                onClick={prevImage}
+                className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-white/80 hover:bg-white text-black rounded-full transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm z-20"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                onClick={nextImage}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-white/80 hover:bg-white text-black rounded-full transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm z-20"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </>
+          )}
 
           {product.discountPrice && (
             <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 text-[10px] font-bold tracking-[0.2em] uppercase z-30">
@@ -94,10 +107,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
         
         <Button
           onClick={handleAddToCart}
-          className="mt-auto w-full group overflow-hidden bg-black hover:bg-black/80 text-white"
+          disabled={isOutOfStock}
+          className="mt-auto w-full group overflow-hidden bg-black hover:bg-black/80 text-white disabled:bg-slate-200 disabled:text-slate-500 disabled:cursor-not-allowed"
         >
           <ShoppingCart className="mr-2 group-hover:scale-110 transition-transform" size={18} />
-          Adicionar ao Carrinho
+          {isOutOfStock ? "Esgotado" : "Adicionar ao Carrinho"}
         </Button>
       </div>
     </div>

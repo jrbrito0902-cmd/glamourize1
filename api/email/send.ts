@@ -56,6 +56,40 @@ export default async function handler(req: any, res: any) {
     </div>
   `;
 
+  // Atualiza o estoque no Sanity em segundo plano
+  const writeToken = process.env.SANITY_WRITE_TOKEN;
+  if (writeToken && items && items.length > 0) {
+    try {
+      const mutations = items.map((item: any) => {
+        const prodId = item.productId || item.id;
+        // Trata ID composto se houver
+        const cleanId = prodId.split("-")[0].length > 10 ? prodId.split("-").slice(0, 5).join("-") : prodId;
+        return {
+          patch: {
+            id: cleanId,
+            dec: {
+              stock: Number(item.quantity || 1)
+            }
+          }
+        };
+      });
+
+      fetch(`https://cw81es59.api.sanity.io/v2024-03-01/data/mutate/production`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${writeToken}`
+        },
+        body: JSON.stringify({ mutations })
+      })
+      .then(res => res.json())
+      .then(data => console.log('Estoque atualizado no Sanity:', JSON.stringify(data)))
+      .catch(err => console.error('Erro ao atualizar estoque no Sanity:', err));
+    } catch (err) {
+      console.error('Erro ao preparar mutação de estoque:', err);
+    }
+  }
+
   if (!apiKey) {
     console.warn('RESEND_API_KEY não configurado. Simulação de e-mail efetuada.');
     return res.status(200).json({

@@ -18,6 +18,8 @@ interface Product {
   images: any[];
   description?: string;
   mlLink?: string;
+  stock?: number;
+  sizes?: string[];
 }
 
 const ProductDetail = () => {
@@ -40,15 +42,19 @@ const ProductDetail = () => {
       try {
         const query = `*[_type == "product" && _id == $id][0]{
           "id": _id,
-          name, category, price, discountPrice, images, description, mlLink
+          name, category, price, discountPrice, images, description, mlLink, stock, sizes
         }`;
         const data = await client.fetch(query, { id });
         setProduct(data);
 
+        if (data?.sizes && data.sizes.length > 0) {
+          setSelectedSize(data.sizes[0]);
+        }
+
         if (data?.category) {
           const relQuery = `*[_type == "product" && category == $category && _id != $id] | order(_createdAt desc)[0...6]{
             "id": _id,
-            name, category, price, discountPrice, images, mlLink
+            name, category, price, discountPrice, images, mlLink, stock, sizes
           }`;
           const relData = await client.fetch(relQuery, { category: data.category, id });
           setRelated(relData);
@@ -65,6 +71,7 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (!product) return;
+    if (product.stock !== undefined && product.stock <= 0) return;
     addToCart(product, { size: selectedSize });
     toast({
       title: "Adicionado ao carrinho!",
@@ -105,6 +112,8 @@ const ProductDetail = () => {
   }
 
   const images = product.images || [];
+  const availableSizes = product.sizes && product.sizes.length > 0 ? product.sizes : ["P", "M", "G", "GG"];
+  const isOutOfStock = product.stock !== undefined && product.stock <= 0;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -195,7 +204,7 @@ const ProductDetail = () => {
                 {product.name}
               </h1>
 
-              <div className="mb-8">
+              <div className="mb-6">
                 {product.discountPrice ? (
                   <div className="flex items-baseline gap-4">
                     <span className="text-4xl font-bold">
@@ -213,6 +222,19 @@ const ProductDetail = () => {
                 )}
               </div>
 
+              {/* Status de estoque */}
+              <div className="mb-8">
+                {isOutOfStock ? (
+                  <span className="inline-block bg-red-100 text-red-800 text-xs font-bold px-3 py-1 uppercase tracking-wider rounded">
+                    Indisponível
+                  </span>
+                ) : (
+                  <span className="inline-block bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1 uppercase tracking-wider rounded">
+                    Em Estoque ({product.stock} disponíveis)
+                  </span>
+                )}
+              </div>
+
               {product.description && (
                 <p className="text-muted-foreground leading-relaxed mb-8 text-sm whitespace-pre-line">
                   {product.description}
@@ -220,34 +242,37 @@ const ProductDetail = () => {
               )}
 
               {/* Seletor de Tamanho para Roupas */}
-              <div className="mb-8">
-                <label className="block text-xs uppercase font-bold tracking-wider text-slate-700 mb-3">
-                  Tamanho Selecionado: <span className="text-black font-extrabold">{selectedSize}</span>
-                </label>
-                <div className="flex gap-2.5">
-                  {["P", "M", "G", "GG"].map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`w-12 h-12 rounded-lg font-bold text-sm border transition-all ${
-                        selectedSize === size
-                          ? "border-black bg-black text-white shadow-md scale-105"
-                          : "border-slate-300 bg-white text-slate-800 hover:border-slate-500"
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
+              {!isOutOfStock && (
+                <div className="mb-8">
+                  <label className="block text-xs uppercase font-bold tracking-wider text-slate-700 mb-3">
+                    Escolha o Tamanho: <span className="text-black font-extrabold">{selectedSize}</span>
+                  </label>
+                  <div className="flex gap-2.5">
+                    {availableSizes.map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => setSelectedSize(size)}
+                        className={`w-12 h-12 rounded-full font-bold text-sm border transition-all ${
+                          selectedSize === size
+                            ? "border-black bg-black text-white shadow-md scale-105"
+                            : "border-slate-300 bg-white text-slate-800 hover:border-slate-500"
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="space-y-3">
                 <Button
                   onClick={handleAddToCart}
-                  className="w-full h-14 bg-black hover:bg-black/80 text-white text-base font-bold uppercase tracking-widest rounded-none transition-all hover:scale-[1.01] flex items-center justify-center gap-3"
+                  disabled={isOutOfStock}
+                  className="w-full h-14 bg-black hover:bg-black/80 text-white text-base font-bold uppercase tracking-widest rounded-none transition-all hover:scale-[1.01] flex items-center justify-center gap-3 disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed"
                 >
                   <ShoppingCart size={20} />
-                  Adicionar ao Carrinho ({selectedSize})
+                  {isOutOfStock ? "Produto Esgotado" : `Adicionar ao Carrinho (${selectedSize})`}
                 </Button>
                 <p className="text-center text-xs text-muted-foreground">
                   🔒 Pagamento seguro via Mercado Pago — Cartão, Pix ou Boleto
