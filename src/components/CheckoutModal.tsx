@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Loader2, CheckCircle, AlertTriangle, ArrowLeft, Clock, Copy, Check } from "lucide-react";
 import { Button } from "./ui/button";
 import { useCart } from "@/contexts/CartContext";
@@ -24,6 +24,59 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
   const [ticketUrl, setTicketUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
+  const [address, setAddress] = useState({
+    cep: destinationCep || "",
+    street: "",
+    number: "",
+    complement: "",
+    neighborhood: "",
+    city: "",
+    state: "",
+  });
+  const [addressErrors, setAddressErrors] = useState<Partial<typeof address>>({});
+  const [loadingCep, setLoadingCep] = useState(false);
+
+  const handleCepBlur = async () => {
+    const cleanCep = address.cep.replace(/\D/g, "");
+    if (cleanCep.length !== 8) return;
+
+    setLoadingCep(true);
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`);
+      const data = await response.json();
+      if (!data.erro) {
+        setAddress((prev) => ({
+          ...prev,
+          street: data.logradouro || "",
+          neighborhood: data.bairro || "",
+          city: data.localidade || "",
+          state: data.uf || "",
+        }));
+        setAddressErrors((prev) => ({
+          ...prev,
+          cep: undefined,
+          street: undefined,
+          neighborhood: undefined,
+          city: undefined,
+          state: undefined,
+        }));
+      } else {
+        setAddressErrors((prev) => ({ ...prev, cep: "CEP não encontrado" }));
+      }
+    } catch (err) {
+      console.error("Erro ao buscar CEP:", err);
+    } finally {
+      setLoadingCep(false);
+    }
+  };
+
+  useEffect(() => {
+    const cleanCep = address.cep.replace(/\D/g, "");
+    if (cleanCep.length === 8 && !address.street) {
+      handleCepBlur();
+    }
+  }, []);
+
   const validate = () => {
     const errs: Partial<typeof form> = {};
     if (!form.name.trim()) errs.name = "Nome obrigatório";
@@ -32,7 +85,18 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
     if (!form.cpf.trim() || form.cpf.replace(/\D/g, "").length !== 11)
       errs.cpf = "CPF inválido (11 dígitos)";
     setErrors(errs);
-    return Object.keys(errs).length === 0;
+
+    const addrErrs: Partial<typeof address> = {};
+    if (!address.cep.trim() || address.cep.replace(/\D/g, "").length !== 8)
+      addrErrs.cep = "CEP inválido";
+    if (!address.street.trim()) addrErrs.street = "Rua obrigatória";
+    if (!address.number.trim()) addrErrs.number = "Número obrigatório";
+    if (!address.neighborhood.trim()) addrErrs.neighborhood = "Bairro obrigatório";
+    if (!address.city.trim()) addrErrs.city = "Cidade obrigatória";
+    if (!address.state.trim()) addrErrs.state = "Estado obrigatório";
+    setAddressErrors(addrErrs);
+
+    return Object.keys(errs).length === 0 && Object.keys(addrErrs).length === 0;
   };
 
   const handleGoToPayment = async (e: React.FormEvent) => {
@@ -81,6 +145,27 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
         shippingMethod: selectedShipping?.name,
       }),
     }).catch((err) => console.error("Erro ao enviar e-mail:", err));
+
+    // Salva o pedido no banco Sanity
+    fetch("/api/order/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        orderId,
+        status: paymentData.status === "approved" ? "paid" : "pending",
+        payer: form,
+        address: address,
+        items: cart,
+        shipping: {
+          method: selectedShipping?.name || "Entrega",
+          price: selectedShipping?.price || 0,
+        },
+        total: grandTotal,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log("Pedido salvo com sucesso:", data))
+      .catch((err) => console.error("Erro ao salvar pedido no Sanity:", err));
 
     clearCart();
 
@@ -242,6 +327,126 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
                     }`}
                   />
                   {errors.cpf && <p className="text-red-500 text-[11px] mt-0.5">{errors.cpf}</p>}
+                </div>
+
+                {/* Endereço de Entrega */}
+                <div className="border-t pt-4 mt-2 space-y-3">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800">Endereço de Entrega</h4>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold mb-1 text-slate-700">CEP</label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={address.cep}
+                          onBlur={handleCepBlur}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/\D/g, "").slice(0, 8);
+                            const formatted = val.length > 5 ? `${val.slice(0, 5)}-${val.slice(5)}` : val;
+                            setAddress((a) => ({ ...a, cep: formatted }));
+                          }}
+                          placeholder="00000-000"
+                          maxLength={9}
+                          className={`w-full border rounded-lg px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-black/20 transition-all ${
+                            addressErrors.cep ? "border-red-400 bg-red-50" : "border-slate-300"
+                          }`}
+                        />
+                        {loadingCep && (
+                          <div className="absolute right-3 top-2.5">
+                            <Loader2 size={14} className="animate-spin text-slate-400" />
+                          </div>
+                        )}
+                      </div>
+                      {addressErrors.cep && <p className="text-red-500 text-[11px] mt-0.5">{addressErrors.cep}</p>}
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold mb-1 text-slate-700">Bairro</label>
+                      <input
+                        type="text"
+                        value={address.neighborhood}
+                        onChange={(e) => setAddress((a) => ({ ...a, neighborhood: e.target.value }))}
+                        placeholder="Centro"
+                        className={`w-full border rounded-lg px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-black/20 transition-all ${
+                          addressErrors.neighborhood ? "border-red-400 bg-red-50" : "border-slate-300"
+                        }`}
+                      />
+                      {addressErrors.neighborhood && <p className="text-red-500 text-[11px] mt-0.5">{addressErrors.neighborhood}</p>}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold mb-1 text-slate-700">Rua / Avenida</label>
+                    <input
+                      type="text"
+                      value={address.street}
+                      onChange={(e) => setAddress((a) => ({ ...a, street: e.target.value }))}
+                      placeholder="Av. Paulista"
+                      className={`w-full border rounded-lg px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-black/20 transition-all ${
+                        addressErrors.street ? "border-red-400 bg-red-50" : "border-slate-300"
+                      }`}
+                    />
+                    {addressErrors.street && <p className="text-red-500 text-[11px] mt-0.5">{addressErrors.street}</p>}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold mb-1 text-slate-700">Número</label>
+                      <input
+                        type="text"
+                        value={address.number}
+                        onChange={(e) => setAddress((a) => ({ ...a, number: e.target.value }))}
+                        placeholder="1000"
+                        className={`w-full border rounded-lg px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-black/20 transition-all ${
+                          addressErrors.number ? "border-red-400 bg-red-50" : "border-slate-300"
+                        }`}
+                      />
+                      {addressErrors.number && <p className="text-red-500 text-[11px] mt-0.5">{addressErrors.number}</p>}
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold mb-1 text-slate-700">Complemento (opcional)</label>
+                      <input
+                        type="text"
+                        value={address.complement}
+                        onChange={(e) => setAddress((a) => ({ ...a, complement: e.target.value }))}
+                        placeholder="Apto 42"
+                        className="w-full border border-slate-300 rounded-lg px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-black/20 transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold mb-1 text-slate-700">Cidade</label>
+                      <input
+                        type="text"
+                        value={address.city}
+                        onChange={(e) => setAddress((a) => ({ ...a, city: e.target.value }))}
+                        placeholder="São Paulo"
+                        className={`w-full border rounded-lg px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-black/20 transition-all ${
+                          addressErrors.city ? "border-red-400 bg-red-50" : "border-slate-300"
+                        }`}
+                      />
+                      {addressErrors.city && <p className="text-red-500 text-[11px] mt-0.5">{addressErrors.city}</p>}
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold mb-1 text-slate-700">Estado (UF)</label>
+                      <input
+                        type="text"
+                        value={address.state}
+                        onChange={(e) => setAddress((a) => ({ ...a, state: e.target.value.toUpperCase().slice(0, 2) }))}
+                        placeholder="SP"
+                        maxLength={2}
+                        className={`w-full border rounded-lg px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-black/20 transition-all ${
+                          addressErrors.state ? "border-red-400 bg-red-50" : "border-slate-300"
+                        }`}
+                      />
+                      {addressErrors.state && <p className="text-red-500 text-[11px] mt-0.5">{addressErrors.state}</p>}
+                    </div>
+                  </div>
                 </div>
               </div>
 
