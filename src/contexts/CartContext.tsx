@@ -35,6 +35,9 @@ interface CartContextType {
   isCartOpen: boolean;
   openCart: () => void;
   closeCart: () => void;
+  isCheckoutOpen: boolean;
+  openCheckout: () => void;
+  closeCheckout: () => void;
   selectedShipping: ShippingOption | null;
   setSelectedShipping: (option: ShippingOption | null) => void;
   destinationCep: string;
@@ -47,6 +50,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [selectedShipping, setSelectedShipping] = useState<ShippingOption | null>(null);
   const [destinationCep, setDestinationCep] = useState("");
 
@@ -106,6 +110,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const openCart = () => setIsCartOpen(true);
   const closeCart = () => setIsCartOpen(false);
 
+  const openCheckout = () => {
+    setIsCartOpen(false);
+    setIsCheckoutOpen(true);
+  };
+  const closeCheckout = () => setIsCheckoutOpen(false);
+
   const total = cart.reduce(
     (sum, item) => sum + (item.discountPrice || item.price) * item.quantity,
     0
@@ -128,6 +138,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         isCartOpen,
         openCart,
         closeCart,
+        isCheckoutOpen,
+        openCheckout,
+        closeCheckout,
         selectedShipping,
         setSelectedShipping,
         destinationCep,

@@ -3,9 +3,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { CartProvider } from "@/contexts/CartContext";
+import { CartProvider, useCart } from "@/contexts/CartContext";
 import CartDrawer from "@/components/CartDrawer";
 import CartFloatingButton from "@/components/CartFloatingButton";
+import CheckoutModal from "@/components/CheckoutModal";
 import Index from "./pages/Index.tsx";
 import Catalog from "./pages/Catalog.tsx";
 import Admin from "./pages/Admin.tsx";
@@ -16,6 +17,12 @@ import ScrollToHash from "./components/ScrollToHash.tsx";
 
 const queryClient = new QueryClient();
 
+const GlobalCheckoutModal = () => {
+  const { isCheckoutOpen, closeCheckout } = useCart();
+  if (!isCheckoutOpen) return null;
+  return <CheckoutModal onClose={closeCheckout} />;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <CartProvider>
@@ -25,6 +32,7 @@ const App = () => (
         <BrowserRouter>
           <ScrollToHash />
           <CartDrawer />
+          <GlobalCheckoutModal />
           <CartFloatingButton />
           <Routes>
             <Route path="/" element={<Index />} />
@@ -42,3 +50,4 @@ const App = () => (
 );
 
 export default App;
+
