@@ -40,7 +40,6 @@ const ProductCatalog = ({ fullPage = false }: ProductCatalogProps) => {
           discountPrice,
           images,
           description,
-          stock,
           sizes
         }`;
         const data = await client.fetch(query);

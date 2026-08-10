@@ -31,14 +31,6 @@ export default {
     },
 
     {
-      name: "stock",
-      title: "Quantidade em Estoque",
-      type: "number",
-      description: "Quantidade disponível para venda. Quando chegar a 0, aparecerá como indisponível.",
-      validation: (Rule: any) => Rule.required().min(0),
-      initialValue: 10,
-    },
-    {
       name: "sizes",
       title: "Tamanhos e Estoques",
       type: "array",

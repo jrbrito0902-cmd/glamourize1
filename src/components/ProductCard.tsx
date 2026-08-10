@@ -20,7 +20,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
     if (product.sizes && Array.isArray(product.sizes) && product.sizes.length > 0 && typeof product.sizes[0] === "object") {
       return product.sizes.reduce((sum: number, s: any) => sum + (s.stock || 0), 0);
     }
-    return product.stock !== undefined ? product.stock : 10;
+    return 0;
   };
 
   const totalStock = getProductStock();

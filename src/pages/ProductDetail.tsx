@@ -17,8 +17,7 @@ interface Product {
   discountPrice?: number;
   images: any[];
   description?: string;
-  stock?: number;
-  sizes?: string[];
+  sizes?: any[];
 }
 
 const ProductDetail = () => {
@@ -41,7 +40,7 @@ const ProductDetail = () => {
       try {
         const query = `*[_type == "product" && _id == $id][0]{
           "id": _id,
-          name, category, price, discountPrice, images, description, stock, sizes
+          name, category, price, discountPrice, images, description, sizes
         }`;
         const data = await client.fetch(query, { id });
         setProduct(data);
@@ -59,7 +58,7 @@ const ProductDetail = () => {
         if (data?.category) {
           const relQuery = `*[_type == "product" && category == $category && _id != $id] | order(_createdAt desc)[0...6]{
             "id": _id,
-            name, category, price, discountPrice, images, stock, sizes
+            name, category, price, discountPrice, images, sizes
           }`;
           const relData = await client.fetch(relQuery, { category: data.category, id });
           setRelated(relData);
@@ -76,7 +75,7 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (!product) return;
-    if (product.stock !== undefined && product.stock <= 0) return;
+    if (isSelectedSizeOutOfStock) return;
     addToCart(product, { size: selectedSize });
     toast({
       title: "Adicionado ao carrinho!",
@@ -130,15 +129,15 @@ const ProductDetail = () => {
         return sizeObj.stock !== undefined ? sizeObj.stock : 0;
       }
     }
-    return product.stock !== undefined ? product.stock : 10;
+    return 0;
   };
 
   const selectedSizeStock = getSelectedSizeStock();
   const isSelectedSizeOutOfStock = selectedSizeStock <= 0;
 
-  const totalStock = product.sizes && Array.isArray(product.sizes) && product.sizes.length > 0 && typeof product.sizes[0] === "object"
+  const totalStock = product.sizes && Array.isArray(product.sizes) && product.sizes.length > 0
     ? product.sizes.reduce((sum: number, s: any) => sum + (typeof s === "object" && s !== null ? (s.stock || 0) : 0), 0)
-    : (product.stock !== undefined ? product.stock : 10);
+    : 0;
   const isProductOutOfStock = totalStock <= 0;
 
   const isSizeOutOfStock = (size: string) => {
@@ -150,7 +149,7 @@ const ProductDetail = () => {
         return (sizeObj.stock || 0) <= 0;
       }
     }
-    return (product.stock !== undefined ? product.stock : 1) <= 0;
+    return true;
   };
 
   return (

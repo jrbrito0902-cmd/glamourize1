@@ -67,7 +67,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     const selectedColor = options?.color || product.color;
     const itemId = getCartItemId(product, selectedSize, selectedColor);
 
-    let maxStock = product.stock;
+    let maxStock: number | undefined = undefined;
     if (product.sizes && Array.isArray(product.sizes) && product.sizes.length > 0) {
       const sizeObj = product.sizes.find(
         (s: any) => typeof s === "object" && s !== null && s.size === selectedSize
