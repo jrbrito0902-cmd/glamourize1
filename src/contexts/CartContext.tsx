@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-import { useToast } from "@/hooks/use-toast";
 
 export interface CartProduct {
   id: string;
@@ -10,10 +9,12 @@ export interface CartProduct {
   category?: string;
   size?: string;
   color?: string;
+  stock?: number;
 }
 
 export interface CartItem extends CartProduct {
   quantity: number;
+  productId?: string;
 }
 
 export interface ShippingOption {
@@ -48,7 +49,6 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const { toast } = useToast();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -70,13 +70,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       const existing = prev.find((item) => item.id === itemId);
       if (existing) {
         const nextQty = existing.quantity + 1;
-        if (existing.stock !== undefined && nextQty > existing.stock) {
-          // Exibe toast notificando limite atingido
-          toast({
-            title: "Limite de estoque atingido",
-            description: `Só temos ${existing.stock} unidades deste produto disponíveis no estoque.`,
-            variant: "destructive",
-          });
+        // Bloqueia se ultrapassar o estoque disponível
+        if (existing.stock !== undefined && existing.stock > 0 && nextQty > existing.stock) {
           return prev;
         }
         return prev.map((item) =>
@@ -107,12 +102,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       prev.map((item) => {
         if (item.id === cartItemId) {
           const newQty = Math.max(1, item.quantity + delta);
-          if (item.stock !== undefined && newQty > item.stock) {
-            toast({
-              title: "Limite de estoque atingido",
-              description: `Só temos ${item.stock} unidades deste produto em estoque.`,
-              variant: "destructive",
-            });
+          // Bloqueia se ultrapassar o estoque disponível
+          if (item.stock !== undefined && item.stock > 0 && newQty > item.stock) {
             return item;
           }
           return { ...item, quantity: newQty };
