@@ -16,8 +16,29 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
 
-  const isOutOfStock = product.stock !== undefined && product.stock <= 0;
-  const defaultSize = product.sizes && product.sizes.length > 0 ? product.sizes[0] : "M";
+  const getProductStock = () => {
+    if (product.sizes && Array.isArray(product.sizes) && product.sizes.length > 0 && typeof product.sizes[0] === "object") {
+      return product.sizes.reduce((sum: number, s: any) => sum + (s.stock || 0), 0);
+    }
+    return product.stock !== undefined ? product.stock : 10;
+  };
+
+  const totalStock = getProductStock();
+  const isOutOfStock = totalStock <= 0;
+
+  const getDefaultSize = () => {
+    if (product.sizes && Array.isArray(product.sizes) && product.sizes.length > 0) {
+      if (typeof product.sizes[0] === "object") {
+        const inStockSize = product.sizes.find((s: any) => s && s.stock > 0);
+        if (inStockSize) return inStockSize.size;
+        return product.sizes[0].size || "M";
+      }
+      return product.sizes[0];
+    }
+    return "M";
+  };
+
+  const defaultSize = getDefaultSize();
 
   const handleAddToCart = () => {
     if (isOutOfStock) return;

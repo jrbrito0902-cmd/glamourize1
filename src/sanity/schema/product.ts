@@ -40,19 +40,52 @@ export default {
     },
     {
       name: "sizes",
-      title: "Tamanhos Disponíveis",
+      title: "Tamanhos e Estoques",
       type: "array",
-      of: [{ type: "string" }],
-      options: {
-        list: [
-          { title: "P", value: "P" },
-          { title: "M", value: "M" },
-          { title: "G", value: "G" },
-          { title: "GG", value: "GG" },
-        ],
-      },
+      of: [
+        {
+          type: "object",
+          name: "sizeStock",
+          title: "Tamanho e Estoque",
+          fields: [
+            {
+              name: "size",
+              title: "Tamanho",
+              type: "string",
+              options: {
+                list: [
+                  { title: "P", value: "P" },
+                  { title: "M", value: "M" },
+                  { title: "G", value: "G" },
+                  { title: "GG", value: "GG" },
+                ],
+              },
+              validation: (Rule: any) => Rule.required(),
+            },
+            {
+              name: "stock",
+              title: "Estoque deste Tamanho",
+              type: "number",
+              validation: (Rule: any) => Rule.required().min(0),
+              initialValue: 10,
+            },
+          ],
+          preview: {
+            select: {
+              size: "size",
+              stock: "stock",
+            },
+            prepare(selection: any) {
+              const { size, stock } = selection;
+              return {
+                title: `Tamanho: ${size || "N/A"}`,
+                subtitle: `Estoque: ${stock !== undefined ? stock : 0}`,
+              };
+            },
+          },
+        },
+      ],
       validation: (Rule: any) => Rule.required().min(1),
-      initialValue: ["P", "M", "G", "GG"],
     },
     {
       name: "images",

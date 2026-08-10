@@ -10,6 +10,7 @@ export interface CartProduct {
   size?: string;
   color?: string;
   stock?: number;
+  sizes?: any[];
 }
 
 export interface CartItem extends CartProduct {
@@ -66,12 +67,22 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     const selectedColor = options?.color || product.color;
     const itemId = getCartItemId(product, selectedSize, selectedColor);
 
+    let maxStock = product.stock;
+    if (product.sizes && Array.isArray(product.sizes) && product.sizes.length > 0) {
+      const sizeObj = product.sizes.find(
+        (s: any) => typeof s === "object" && s !== null && s.size === selectedSize
+      );
+      if (sizeObj && sizeObj.stock !== undefined) {
+        maxStock = sizeObj.stock;
+      }
+    }
+
     setCart((prev) => {
       const existing = prev.find((item) => item.id === itemId);
       if (existing) {
         const nextQty = existing.quantity + 1;
         // Bloqueia se ultrapassar o estoque disponível
-        if (existing.stock !== undefined && existing.stock > 0 && nextQty > existing.stock) {
+        if (maxStock !== undefined && maxStock > 0 && nextQty > maxStock) {
           return prev;
         }
         return prev.map((item) =>
@@ -87,6 +98,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           size: selectedSize,
           color: selectedColor,
           quantity: 1,
+          stock: maxStock,
         },
       ];
     });

@@ -47,7 +47,13 @@ const ProductDetail = () => {
         setProduct(data);
 
         if (data?.sizes && data.sizes.length > 0) {
-          setSelectedSize(data.sizes[0]);
+          const firstAvailable = data.sizes.find(
+            (s: any) => typeof s === "object" && s !== null ? s.stock > 0 : true
+          );
+          const firstSize = firstAvailable
+            ? (typeof firstAvailable === "object" ? firstAvailable.size : firstAvailable)
+            : (typeof data.sizes[0] === "object" ? data.sizes[0].size : data.sizes[0]);
+          setSelectedSize(firstSize);
         }
 
         if (data?.category) {
@@ -111,8 +117,41 @@ const ProductDetail = () => {
   }
 
   const images = product.images || [];
-  const availableSizes = product.sizes && product.sizes.length > 0 ? product.sizes : ["P", "M", "G", "GG"];
-  const isOutOfStock = product.stock !== undefined && product.stock <= 0;
+  const availableSizes = product.sizes && product.sizes.length > 0
+    ? product.sizes.map((s: any) => typeof s === "object" && s !== null ? s.size : s)
+    : ["P", "M", "G", "GG"];
+
+  const getSelectedSizeStock = () => {
+    if (product.sizes && Array.isArray(product.sizes) && product.sizes.length > 0) {
+      const sizeObj = product.sizes.find(
+        (s: any) => typeof s === "object" && s !== null && s.size === selectedSize
+      );
+      if (sizeObj) {
+        return sizeObj.stock !== undefined ? sizeObj.stock : 0;
+      }
+    }
+    return product.stock !== undefined ? product.stock : 10;
+  };
+
+  const selectedSizeStock = getSelectedSizeStock();
+  const isSelectedSizeOutOfStock = selectedSizeStock <= 0;
+
+  const totalStock = product.sizes && Array.isArray(product.sizes) && product.sizes.length > 0 && typeof product.sizes[0] === "object"
+    ? product.sizes.reduce((sum: number, s: any) => sum + (typeof s === "object" && s !== null ? (s.stock || 0) : 0), 0)
+    : (product.stock !== undefined ? product.stock : 10);
+  const isProductOutOfStock = totalStock <= 0;
+
+  const isSizeOutOfStock = (size: string) => {
+    if (product.sizes && Array.isArray(product.sizes) && product.sizes.length > 0) {
+      const sizeObj = product.sizes.find(
+        (s: any) => typeof s === "object" && s !== null && s.size === size
+      );
+      if (sizeObj) {
+        return (sizeObj.stock || 0) <= 0;
+      }
+    }
+    return (product.stock !== undefined ? product.stock : 1) <= 0;
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -223,13 +262,13 @@ const ProductDetail = () => {
 
               {/* Status de estoque */}
               <div className="mb-8">
-                {isOutOfStock ? (
+                {isSelectedSizeOutOfStock ? (
                   <span className="inline-block bg-red-100 text-red-800 text-xs font-bold px-3 py-1 uppercase tracking-wider rounded">
-                    Indisponível
+                    Tamanho {selectedSize} Indisponível
                   </span>
                 ) : (
                   <span className="inline-block bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1 uppercase tracking-wider rounded">
-                    Em Estoque ({product.stock} disponíveis)
+                    Tamanho {selectedSize} Em Estoque ({selectedSizeStock} disponíveis)
                   </span>
                 )}
               </div>
@@ -241,25 +280,36 @@ const ProductDetail = () => {
               )}
 
               {/* Seletor de Tamanho para Roupas */}
-              {!isOutOfStock && (
+              {!isProductOutOfStock && (
                 <div className="mb-8">
                   <label className="block text-xs uppercase font-bold tracking-wider text-slate-700 mb-3">
                     Escolha o Tamanho: <span className="text-black font-extrabold">{selectedSize}</span>
                   </label>
                   <div className="flex gap-2.5">
-                    {availableSizes.map((size) => (
-                      <button
-                        key={size}
-                        onClick={() => setSelectedSize(size)}
-                        className={`w-12 h-12 rounded-full font-bold text-sm border transition-all ${
-                          selectedSize === size
-                            ? "border-black bg-black text-white shadow-md scale-105"
-                            : "border-slate-300 bg-white text-slate-800 hover:border-slate-500"
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
+                    {availableSizes.map((size) => {
+                      const outOfStock = isSizeOutOfStock(size);
+                      return (
+                        <button
+                          key={size}
+                          disabled={outOfStock}
+                          onClick={() => setSelectedSize(size)}
+                          className={`w-12 h-12 rounded-full font-bold text-sm border transition-all relative ${
+                            selectedSize === size
+                              ? "border-black bg-black text-white shadow-md scale-105"
+                              : outOfStock
+                              ? "border-slate-200 bg-slate-50 text-slate-400 cursor-not-allowed opacity-50"
+                              : "border-slate-300 bg-white text-slate-800 hover:border-slate-500"
+                          }`}
+                        >
+                          {size}
+                          {outOfStock && (
+                            <span className="absolute inset-0 flex items-center justify-center">
+                              <span className="w-8 h-[1px] bg-slate-400 rotate-45" />
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -267,11 +317,11 @@ const ProductDetail = () => {
               <div className="space-y-3">
                 <Button
                   onClick={handleAddToCart}
-                  disabled={isOutOfStock}
+                  disabled={isSelectedSizeOutOfStock}
                   className="w-full h-14 bg-black hover:bg-black/80 text-white text-base font-bold uppercase tracking-widest rounded-none transition-all hover:scale-[1.01] flex items-center justify-center gap-3 disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed"
                 >
                   <ShoppingCart size={20} />
-                  {isOutOfStock ? "Produto Esgotado" : `Adicionar ao Carrinho (${selectedSize})`}
+                  {isSelectedSizeOutOfStock ? "Tamanho Esgotado" : `Adicionar ao Carrinho (${selectedSize})`}
                 </Button>
                 <p className="text-center text-xs text-muted-foreground">
                   🔒 Pagamento seguro via Mercado Pago — Cartão, Pix ou Boleto
