@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Loader2, CheckCircle, AlertTriangle, ArrowLeft, Clock } from "lucide-react";
+import { X, Loader2, CheckCircle, AlertTriangle, ArrowLeft, Clock, Copy, Check } from "lucide-react";
 import { Button } from "./ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { urlFor } from "@/lib/sanity";
@@ -19,6 +19,10 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
   const [apiError, setApiError] = useState<string | null>(null);
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
   const [orderId] = useState(`EV-${Math.floor(100000 + Math.random() * 900000)}`);
+  const [qrCode, setQrCode] = useState<string | null>(null);
+  const [qrCodeBase64, setQrCodeBase64] = useState<string | null>(null);
+  const [ticketUrl, setTicketUrl] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const validate = () => {
     const errs: Partial<typeof form> = {};
@@ -79,6 +83,15 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
     }).catch((err) => console.error("Erro ao enviar e-mail:", err));
 
     clearCart();
+
+    if (paymentData.qr_code) setQrCode(paymentData.qr_code);
+    if (paymentData.qr_code_base64) setQrCodeBase64(paymentData.qr_code_base64);
+    if (paymentData.ticket_url) setTicketUrl(paymentData.ticket_url);
+
+    // Mock para simulação local ou sandbox caso não retorne dados reais
+    if (!paymentData.qr_code && paymentData.payment_method_id === "pix") {
+      setQrCode("00020101021226870014br.gov.bcb.pix2565pix.mercadopago.com/qr/v2/5b521230-59c1-4ecc-b915-4ac6e2e8b982");
+    }
 
     if (paymentData.status === "approved") {
       setStep("success");
@@ -293,19 +306,95 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
 
           {/* ETAPA 3B: Pagamento pendente (Pix/Boleto aguardando) */}
           {step === "pending" && (
-            <div className="p-10 flex flex-col items-center justify-center gap-4 text-center">
-              <div className="w-20 h-20 rounded-full bg-amber-50 flex items-center justify-center">
-                <Clock className="w-12 h-12 text-amber-500" />
+            <div className="p-6 flex flex-col items-center justify-center gap-4 text-center">
+              <div className="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center">
+                <Clock className="w-6 h-6 text-amber-500" />
               </div>
-              <h3 className="text-2xl font-bold text-slate-900">Aguardando Pagamento</h3>
-              <p className="text-sm text-slate-600 max-w-xs">
-                Seu pedido <strong>#{orderId}</strong> foi registrado. Complete o pagamento via Pix ou Boleto para confirmar.
+              <h3 className="text-xl font-bold text-slate-900">Aguardando Pagamento</h3>
+              <p className="text-xs text-slate-600 max-w-xs">
+                Seu pedido <strong>#{orderId}</strong> foi registrado. Complete o pagamento para confirmar sua compra.
               </p>
-              <p className="text-xs text-slate-400">
-                Enviamos as instruções para <strong>{form.email}</strong>.
-              </p>
-              <Button onClick={onClose} className="mt-2 bg-black text-white rounded-xl px-8 h-11 hover:bg-black/90 text-sm">
-                Fechar
+
+              {/* Se for Pix e tiver QR Code */}
+              {qrCode && (
+                <div className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col items-center gap-3">
+                  <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-1 uppercase tracking-wider rounded-full">
+                    Pague com Pix
+                  </span>
+                  
+                  {/* QR Code Image */}
+                  <div className="bg-white p-3 rounded-xl border border-slate-150 shadow-sm">
+                    <img
+                      src={
+                        qrCodeBase64
+                          ? `data:image/png;base64,${qrCodeBase64}`
+                          : `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrCode)}`
+                      }
+                      alt="Pix QR Code"
+                      className="w-40 h-40 object-contain"
+                    />
+                  </div>
+
+                  <p className="text-[11px] text-slate-500 max-w-[240px]">
+                    Escaneie o QR Code acima com o app do seu banco ou copie a chave abaixo:
+                  </p>
+
+                  {/* Copia e Cola */}
+                  <div className="w-full flex gap-1 bg-white border rounded-lg p-1.5 items-center">
+                    <input
+                      type="text"
+                      readOnly
+                      value={qrCode}
+                      className="flex-grow text-[11px] text-slate-600 bg-transparent outline-none px-2 select-all overflow-hidden text-ellipsis whitespace-nowrap"
+                    />
+                    <Button
+                      onClick={() => {
+                        navigator.clipboard.writeText(qrCode || "");
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 2000);
+                      }}
+                      className="h-8 bg-black hover:bg-black/90 text-white rounded px-3 text-xs flex items-center gap-1.5 flex-shrink-0"
+                    >
+                      {copied ? (
+                        <>
+                          <Check size={12} />
+                          Copiado
+                        </>
+                      ) : (
+                        <>
+                          <Copy size={12} />
+                          Copiar
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Se for Boleto e tiver Link */}
+              {ticketUrl && (
+                <div className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col items-center gap-3">
+                  <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2.5 py-1 uppercase tracking-wider rounded-full">
+                    Boleto Bancário
+                  </span>
+                  <p className="text-[11px] text-slate-500">
+                    Clique no botão abaixo para abrir ou imprimir o seu boleto:
+                  </p>
+                  <a
+                    href={ticketUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full"
+                  >
+                    <Button className="w-full h-11 bg-black text-white hover:bg-black/90 text-xs font-bold uppercase tracking-wider rounded-lg">
+                      Visualizar Boleto
+                    </Button>
+                  </a>
+                </div>
+              )}
+
+              <Button onClick={onClose} className="mt-2 w-full border border-slate-250 bg-white hover:bg-slate-50 text-slate-800 rounded-xl h-11 text-xs font-bold uppercase tracking-wider">
+                Fechar Janela
               </Button>
             </div>
           )}

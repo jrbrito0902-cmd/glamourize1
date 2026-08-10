@@ -55,6 +55,9 @@ export default async function handler(req: any, res: any) {
       payment_method_id: data.payment_method_id,
       payment_type_id: data.payment_type_id,
       transaction_amount: data.transaction_amount,
+      qr_code: data.point_of_interaction?.transaction_data?.qr_code,
+      qr_code_base64: data.point_of_interaction?.transaction_data?.qr_code_base64,
+      ticket_url: data.point_of_interaction?.transaction_data?.ticket_url,
       isSimulated: false,
     });
   } catch (err: any) {
