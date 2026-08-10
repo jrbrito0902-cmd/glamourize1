@@ -12,7 +12,7 @@ interface CheckoutModalProps {
 type Step = "form" | "loading" | "payment" | "success" | "pending" | "error";
 
 const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
-  const { cart, total, grandTotal, selectedShipping, clearCart } = useCart();
+  const { cart, total, grandTotal, selectedShipping, clearCart, destinationCep } = useCart();
   const [step, setStep] = useState<Step>("form");
   const [form, setForm] = useState({ name: "", email: "", cpf: "" });
   const [errors, setErrors] = useState<Partial<typeof form>>({});
