@@ -19,6 +19,8 @@
  *   - MELHOR_ENVIO_FROM_STATE     → UF do lojista (ex: SP)
  */
 
+import { createClient } from "@sanity/client";
+
 // 500g por item — padrão para roupas em envelope bolha
 const WEIGHT_PER_ITEM_KG = 0.5;
 
@@ -33,7 +35,7 @@ export default async function handler(req: any, res: any) {
   const {
     orderId,
     serviceId,  // ID da transportadora escolhida pelo cliente (do Melhor Envio)
-    payer,      // { name, email, cpf }
+    payer,      // { name, email, cpf, phone }
     address,    // { cep, street, number, complement, neighborhood, city, state }
     items,      // CartItem[]
     total,      // valor total pago
@@ -99,11 +101,12 @@ export default async function handler(req: any, res: any) {
     postal_code: address.cep.replace(/\D/g, ""),
   };
 
-  // Lista de produtos para o Melhor Envio
+  // Lista de produtos para o Melhor Envio com peso individual obrigatório
   const melhorEnvioProducts = items.map((item: any) => ({
     name: `${item.name}${item.size ? ` (Tam: ${item.size})` : ""}`,
     quantity: Number(item.quantity || 1),
     unitary_value: Number(item.discountPrice || item.price || 0),
+    weight: WEIGHT_PER_ITEM_KG,
   }));
 
   const payload = {
@@ -151,6 +154,38 @@ export default async function handler(req: any, res: any) {
 
     if (!response.ok) {
       console.error("Melhor Envio cart error:", data);
+      
+      // Tenta gravar o erro no pedido do Sanity para fácil depuração
+      const writeToken = process.env.SANITY_WRITE_TOKEN || process.env.SANITY_TOKEN;
+      if (writeToken) {
+        try {
+          const sanityClient = createClient({
+            projectId: "cw81es59",
+            dataset: "production",
+            token: writeToken,
+            useCdn: false,
+            apiVersion: "2024-03-01",
+          });
+
+          // Busca o ID do documento pelo orderId
+          const orderDocs = await sanityClient.fetch(
+            `*[_type == "order" && orderId == $orderId]{ _id }`,
+            { orderId }
+          );
+
+          if (orderDocs && orderDocs.length > 0) {
+            const errorMsg = data.message || JSON.stringify(data.errors || data);
+            await sanityClient
+              .patch(orderDocs[0]._id)
+              .set({ shippingError: `Erro do Melhor Envio: ${errorMsg}` })
+              .commit();
+            console.log("Erro de envio gravado com sucesso no Sanity.");
+          }
+        } catch (sanityErr) {
+          console.error("Erro ao registrar falha de envio no Sanity:", sanityErr);
+        }
+      }
+
       return res.status(response.status).json({
         error: "Erro ao adicionar pedido ao carrinho do Melhor Envio",
         details: data,

@@ -89,6 +89,13 @@ export default {
       type: "number",
       validation: (Rule: any) => Rule.required().min(0),
     },
+    {
+      name: "shippingError",
+      title: "Erro no Envio (Melhor Envio)",
+      type: "string",
+      readOnly: true,
+      description: "Caso ocorra algum erro ao tentar mandar a etiqueta para o Melhor Envio, o detalhe aparecerá aqui.",
+    },
   ],
   preview: {
     select: {
