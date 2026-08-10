@@ -8,23 +8,38 @@ export interface CartProduct {
   images: any[];
   category?: string;
   mlLink?: string;
+  size?: string;
+  color?: string;
 }
 
 export interface CartItem extends CartProduct {
   quantity: number;
 }
 
+export interface ShippingOption {
+  id: number | string;
+  name: string;
+  price: number;
+  custom_delivery_time: number;
+  company?: { name: string; picture?: string };
+}
+
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (product: CartProduct) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, delta: number) => void;
+  addToCart: (product: CartProduct, options?: { size?: string; color?: string }) => void;
+  removeFromCart: (cartItemId: string) => void;
+  updateQuantity: (cartItemId: string, delta: number) => void;
   clearCart: () => void;
   total: number;
   totalItems: number;
   isCartOpen: boolean;
   openCart: () => void;
   closeCart: () => void;
+  selectedShipping: ShippingOption | null;
+  setSelectedShipping: (option: ShippingOption | null) => void;
+  destinationCep: string;
+  setDestinationCep: (cep: string) => void;
+  grandTotal: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -32,27 +47,49 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [selectedShipping, setSelectedShipping] = useState<ShippingOption | null>(null);
+  const [destinationCep, setDestinationCep] = useState("");
 
-  const addToCart = (product: CartProduct) => {
+  const getCartItemId = (product: CartProduct, size?: string, color?: string) => {
+    const s = size || product.size || "";
+    const c = color || product.color || "";
+    return `${product.id}${s ? `-${s}` : ""}${c ? `-${c}` : ""}`;
+  };
+
+  const addToCart = (product: CartProduct, options?: { size?: string; color?: string }) => {
+    const selectedSize = options?.size || product.size;
+    const selectedColor = options?.color || product.color;
+    const itemId = getCartItemId(product, selectedSize, selectedColor);
+
     setCart((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
+      const existing = prev.find((item) => item.id === itemId);
       if (existing) {
         return prev.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === itemId ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      return [...prev, { ...product, quantity: 1 }];
+      return [
+        ...prev,
+        {
+          ...product,
+          id: itemId,
+          size: selectedSize,
+          color: selectedColor,
+          quantity: 1,
+        },
+      ];
     });
+    setIsCartOpen(true);
   };
 
-  const removeFromCart = (productId: string) => {
-    setCart((prev) => prev.filter((item) => item.id !== productId));
+  const removeFromCart = (cartItemId: string) => {
+    setCart((prev) => prev.filter((item) => item.id !== cartItemId));
   };
 
-  const updateQuantity = (productId: string, delta: number) => {
+  const updateQuantity = (cartItemId: string, delta: number) => {
     setCart((prev) =>
       prev.map((item) => {
-        if (item.id === productId) {
+        if (item.id === cartItemId) {
           const newQty = Math.max(1, item.quantity + delta);
           return { ...item, quantity: newQty };
         }
@@ -61,7 +98,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-  const clearCart = () => setCart([]);
+  const clearCart = () => {
+    setCart([]);
+    setSelectedShipping(null);
+  };
+
   const openCart = () => setIsCartOpen(true);
   const closeCart = () => setIsCartOpen(false);
 
@@ -72,11 +113,26 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
+  const grandTotal = total + (selectedShipping ? selectedShipping.price : 0);
+
   return (
     <CartContext.Provider
       value={{
-        cart, addToCart, removeFromCart, updateQuantity, clearCart,
-        total, totalItems, isCartOpen, openCart, closeCart,
+        cart,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+        total,
+        totalItems,
+        isCartOpen,
+        openCart,
+        closeCart,
+        selectedShipping,
+        setSelectedShipping,
+        destinationCep,
+        setDestinationCep,
+        grandTotal,
       }}
     >
       {children}
@@ -89,4 +145,5 @@ export const useCart = () => {
   if (!ctx) throw new Error("useCart deve ser usado dentro de CartProvider");
   return ctx;
 };
+
 

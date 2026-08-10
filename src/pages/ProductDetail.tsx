@@ -27,6 +27,7 @@ const ProductDetail = () => {
   const [related, setRelated] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentImage, setCurrentImage] = useState(0);
+  const [selectedSize, setSelectedSize] = useState("M");
   const { addToCart, openCart } = useCart();
   const { toast } = useToast();
 
@@ -64,10 +65,10 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (!product) return;
-    addToCart(product);
+    addToCart(product, { size: selectedSize });
     toast({
       title: "Adicionado ao carrinho!",
-      description: `${product.name} foi adicionado ao seu carrinho.`,
+      description: `${product.name} (Tam: ${selectedSize}) foi adicionado ao seu carrinho.`,
     });
     openCart();
   };
@@ -218,13 +219,35 @@ const ProductDetail = () => {
                 </p>
               )}
 
+              {/* Seletor de Tamanho para Roupas */}
+              <div className="mb-8">
+                <label className="block text-xs uppercase font-bold tracking-wider text-slate-700 mb-3">
+                  Tamanho Selecionado: <span className="text-black font-extrabold">{selectedSize}</span>
+                </label>
+                <div className="flex gap-2.5">
+                  {["P", "M", "G", "GG"].map((size) => (
+                    <button
+                      key={size}
+                      onClick={() => setSelectedSize(size)}
+                      className={`w-12 h-12 rounded-lg font-bold text-sm border transition-all ${
+                        selectedSize === size
+                          ? "border-black bg-black text-white shadow-md scale-105"
+                          : "border-slate-300 bg-white text-slate-800 hover:border-slate-500"
+                      }`}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div className="space-y-3">
                 <Button
                   onClick={handleAddToCart}
                   className="w-full h-14 bg-black hover:bg-black/80 text-white text-base font-bold uppercase tracking-widest rounded-none transition-all hover:scale-[1.01] flex items-center justify-center gap-3"
                 >
                   <ShoppingCart size={20} />
-                  Adicionar ao Carrinho
+                  Adicionar ao Carrinho ({selectedSize})
                 </Button>
                 <p className="text-center text-xs text-muted-foreground">
                   🔒 Pagamento seguro via Mercado Pago — Cartão, Pix ou Boleto
