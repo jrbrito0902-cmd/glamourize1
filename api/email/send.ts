@@ -12,16 +12,6 @@ export default async function handler(req: any, res: any) {
   const apiKey = process.env.RESEND_API_KEY;
   const fromEmail = process.env.EMAIL_FROM || 'Estilo VIP <onboarding@resend.dev>';
 
-  const itemsHtml = (items || [])
-    .map(
-      (item: any) =>
-        `<tr>
-          <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.name} ${item.size ? `(Tam: ${item.size})` : ''}</td>
-          <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
-          <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">R$ ${((item.discountPrice || item.price) * item.quantity).toFixed(2)}</td>
-        </tr>`
-    )
-    .join('');
 
   const itemsHtml = (items || [])
     .map(
