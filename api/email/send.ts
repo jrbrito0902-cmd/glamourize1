@@ -5,7 +5,7 @@ export default async function handler(req: any, res: any) {
     return res.status(405).json({ error: 'Método não permitido' });
   }
 
-  const { orderId, payer, items, total, shippingFee, shippingMethod } = req.body || {};
+  const { orderId, payer, items, total, shippingFee, shippingMethod, isPaid } = req.body || {};
 
   if (!payer || !payer.email) {
     return res.status(400).json({ error: 'E-mail do destinatário é obrigatório' });
@@ -38,13 +38,18 @@ export default async function handler(req: any, res: any) {
         <!-- Header Elegante (Preto e Ouro) -->
         <div style="background-color: #000000; padding: 35px 20px; text-align: center; border-bottom: 3px solid #d4af37;">
           <h1 style="color: #ffffff; font-size: 26px; margin: 0; font-weight: 300; letter-spacing: 6px; text-transform: uppercase; font-family: Georgia, serif;">ESTILO VIP</h1>
-          <p style="color: #d4af37; font-size: 10px; margin: 5px 0 0 0; letter-spacing: 4px; text-transform: uppercase; font-weight: bold;">Moda & Elegância</p>
+          <p style="color: #d4af37; font-size: 10px; margin: 5px 0 0 0; letter-spacing: 4px; text-transform: uppercase; font-weight: bold;">
+            ${isPaid ? "Pagamento Aprovado" : "Pedido Recebido"}
+          </p>
         </div>
 
         <div style="padding: 30px 25px;">
           <h2 style="color: #1a1a1a; font-size: 18px; margin-top: 0; font-weight: 700; text-align: center;">Olá, ${payer.name || 'Cliente'}!</h2>
           <p style="color: #555555; font-size: 13px; line-height: 1.6; text-align: center; margin-bottom: 25px;">
-            Agradecemos imensamente pela sua compra! Seu pedido foi registrado com sucesso e está aguardando a confirmação de pagamento.
+            ${isPaid 
+              ? "Confirmamos o seu pagamento com sucesso! Seu pedido já está em fase de preparação para o envio." 
+              : "Agradecemos imensamente pela sua compra! Seu pedido foi registrado com sucesso e está aguardando a confirmação de pagamento."
+            }
           </p>
 
           <!-- Card: Detalhes da Compra -->
@@ -191,7 +196,9 @@ export default async function handler(req: any, res: any) {
       body: JSON.stringify({
         from: fromEmail,
         to: [payer.email],
-        subject: `Confirmação de Pedido - Estilo VIP #${orderId || ''}`,
+        subject: isPaid 
+          ? `Pagamento Aprovado! Estilo VIP #${orderId || ''}`
+          : `Confirmação de Pedido - Estilo VIP #${orderId || ''}`,
         html: emailHtml
       })
     });

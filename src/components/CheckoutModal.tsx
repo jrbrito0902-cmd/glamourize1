@@ -182,6 +182,7 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
         total: grandTotal,
         shippingFee: shippingPrice,
         shippingMethod: shippingName,
+        isPaid: false,
       }),
     }).catch((err) => console.error("Erro ao enviar e-mail:", err));
 
