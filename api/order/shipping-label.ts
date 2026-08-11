@@ -192,6 +192,39 @@ export default async function handler(req: any, res: any) {
       });
     }
 
+    // Salva os dados de sucesso da etiqueta no Sanity
+    const writeToken = process.env.SANITY_WRITE_TOKEN || process.env.SANITY_TOKEN;
+    if (writeToken && data.id) {
+      try {
+        const sanityClient = createClient({
+          projectId: "cw81es59",
+          dataset: "production",
+          token: writeToken,
+          useCdn: false,
+          apiVersion: "2024-03-01",
+        });
+
+        const orderDocs = await sanityClient.fetch(
+          `*[_type == "order" && orderId == $orderId]{ _id }`,
+          { orderId }
+        );
+
+        if (orderDocs && orderDocs.length > 0) {
+          await sanityClient
+            .patch(orderDocs[0]._id)
+            .set({
+              shippingLabelId: data.id,
+              shippingLabelProtocol: data.protocol || "",
+              shippingError: "", // limpa erro anterior caso exista
+            })
+            .commit();
+          console.log("Dados de sucesso da etiqueta salvos no Sanity.");
+        }
+      } catch (sanityErr) {
+        console.error("Erro ao registrar dados de sucesso no Sanity:", sanityErr);
+      }
+    }
+
     return res.status(200).json({
       success: true,
       id: data.id,

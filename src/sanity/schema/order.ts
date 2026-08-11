@@ -96,6 +96,18 @@ export default {
       readOnly: true,
       description: "Caso ocorra algum erro ao tentar mandar a etiqueta para o Melhor Envio, o detalhe aparecerá aqui.",
     },
+    {
+      name: "shippingLabelId",
+      title: "ID do Carrinho (Melhor Envio)",
+      type: "string",
+      readOnly: true,
+    },
+    {
+      name: "shippingLabelProtocol",
+      title: "Protocolo de Envio (Melhor Envio)",
+      type: "string",
+      readOnly: true,
+    },
   ],
   preview: {
     select: {
