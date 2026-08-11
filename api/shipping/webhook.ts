@@ -16,7 +16,9 @@ export default async function handler(req: any, res: any) {
   console.log(`Webhook Melhor Envio recebido. UUID: ${uuid}, Status: ${status}, Rastreio: ${trackingCode}`);
 
   if (!uuid) {
-    return res.status(400).json({ error: "UUID do envio ausente no payload" });
+    // Se não tiver UUID, provavelmente é o ping de validação que o Melhor Envio faz ao cadastrar
+    console.log("Ping de validação do Melhor Envio recebido com sucesso.");
+    return res.status(200).json({ status: "ok", message: "Ping de validação recebido com sucesso" });
   }
 
   const writeToken = process.env.SANITY_WRITE_TOKEN || process.env.SANITY_TOKEN;
