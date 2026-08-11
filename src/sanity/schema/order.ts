@@ -19,6 +19,7 @@ export default {
           { title: "Aguardando Pagamento", value: "pending" },
           { title: "Pago / Aprovado", value: "paid" },
           { title: "Enviado", value: "shipped" },
+          { title: "Entregue", value: "delivered" },
           { title: "Cancelado", value: "canceled" },
         ],
       },
@@ -122,6 +123,7 @@ export default {
         pending: "⏳ Aguardando",
         paid: "✅ Pago",
         shipped: "📦 Enviado",
+        delivered: "✨ Entregue",
         canceled: "❌ Cancelado",
       };
       return {

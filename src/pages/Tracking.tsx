@@ -167,6 +167,7 @@ const Tracking = () => {
       pending: { label: "Aguardando Pagamento", color: "text-amber-600", bg: "bg-amber-50 border-amber-100", icon: Clock },
       paid: { label: "Pago & Confirmado", color: "text-emerald-600", bg: "bg-emerald-50 border-emerald-100", icon: CheckCircle },
       shipped: { label: "Pedido Enviado", color: "text-blue-600", bg: "bg-blue-50 border-blue-100", icon: Truck },
+      delivered: { label: "Pedido Entregue", color: "text-emerald-700", bg: "bg-emerald-50 border-emerald-200", icon: CheckCircle },
       canceled: { label: "Pedido Cancelado", color: "text-rose-600", bg: "bg-rose-50 border-rose-100", icon: AlertTriangle }
     };
     return details[status] || { label: status, color: "text-slate-600", bg: "bg-slate-50 border-slate-100", icon: Package };
