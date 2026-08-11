@@ -135,16 +135,23 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
   };
 
   const handlePaymentSuccess = (paymentData: any) => {
+    const shippingId = selectedShipping?.id;
+    const shippingName = selectedShipping?.name;
+    const shippingPrice = selectedShipping?.price;
+    const itemsSnapshot = [...cart];
+    const addressSnapshot = { ...address };
+    const payerSnapshot = { ...form };
+
     fetch("/api/email/send", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         orderId,
-        payer: form,
-        items: cart,
+        payer: payerSnapshot,
+        items: itemsSnapshot,
         total: grandTotal,
-        shippingFee: selectedShipping?.price,
-        shippingMethod: selectedShipping?.name,
+        shippingFee: shippingPrice,
+        shippingMethod: shippingName,
       }),
     }).catch((err) => console.error("Erro ao enviar e-mail:", err));
 
@@ -155,12 +162,12 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
       body: JSON.stringify({
         orderId,
         status: paymentData.status === "approved" ? "paid" : "pending",
-        payer: form,
-        address: address,
-        items: cart,
+        payer: payerSnapshot,
+        address: addressSnapshot,
+        items: itemsSnapshot,
         shipping: {
-          method: selectedShipping?.name || "Entrega",
-          price: selectedShipping?.price || 0,
+          method: shippingName || "Entrega",
+          price: shippingPrice || 0,
         },
         total: grandTotal,
       }),
@@ -170,16 +177,16 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
         console.log("Pedido salvo no Sanity:", data);
         
         // Adiciona ao carrinho do Melhor Envio apenas DEPOIS que o pedido foi criado no Sanity
-        if (selectedShipping?.id) {
+        if (shippingId) {
           fetch("/api/order/shipping-label", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               orderId,
-              serviceId: selectedShipping.id,
-              payer: form,
-              address: address,
-              items: cart,
+              serviceId: shippingId,
+              payer: payerSnapshot,
+              address: addressSnapshot,
+              items: itemsSnapshot,
               total: grandTotal,
             }),
           })
