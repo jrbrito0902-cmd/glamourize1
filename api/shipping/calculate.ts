@@ -95,16 +95,46 @@ export default async function handler(req: any, res: any) {
     const data = await response.json();
     const validOptions = (Array.isArray(data) ? data : [])
       .filter((opt: any) => !opt.error && opt.price)
-      .map((opt: any) => ({
-        id: opt.id,
-        name: opt.name,
-        price: parseFloat(opt.custom_price || opt.price),
-        custom_delivery_time: opt.custom_delivery_time || opt.delivery_time,
-        company: {
-          name: opt.company?.name || 'Transportadora',
-          picture: opt.company?.picture || ''
+      .filter((opt: any) => {
+        const companyName = (opt.company?.name || "").toLowerCase();
+        const serviceName = (opt.name || "").toLowerCase();
+        
+        // Mantém apenas Correios (PAC e SEDEX), Jadlog (.Package e .Com) e Loggi
+        if (companyName.includes("correios")) {
+          return serviceName === "pac" || serviceName === "sedex";
         }
-      }));
+        if (companyName.includes("jadlog")) {
+          return serviceName === ".package" || serviceName === ".com";
+        }
+        if (companyName.includes("loggi")) {
+          return true;
+        }
+        return false;
+      })
+      .map((opt: any) => {
+        let displayName = opt.name;
+        const companyName = (opt.company?.name || "").toLowerCase();
+        const serviceName = (opt.name || "").toLowerCase();
+
+        if (companyName.includes("correios")) {
+          displayName = serviceName === "sedex" ? "Correios SEDEX" : "Correios PAC";
+        } else if (companyName.includes("jadlog")) {
+          displayName = serviceName === ".package" ? "Jadlog .Package" : "Jadlog .Com";
+        } else if (companyName.includes("loggi")) {
+          displayName = `Loggi ${opt.name}`;
+        }
+
+        return {
+          id: opt.id,
+          name: displayName,
+          price: parseFloat(opt.custom_price || opt.price),
+          custom_delivery_time: opt.custom_delivery_time || opt.delivery_time,
+          company: {
+            name: opt.company?.name || 'Transportadora',
+            picture: opt.company?.picture || ''
+          }
+        };
+      });
 
     if (validOptions.length === 0) {
       throw new Error('Nenhuma opção de frete válida disponível');
