@@ -13,6 +13,7 @@ import Admin from "./pages/Admin.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import OrderConfirmation from "./pages/OrderConfirmation.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
+import Tracking from "./pages/Tracking.tsx";
 import ScrollToHash from "./components/ScrollToHash.tsx";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/catalog" element={<Catalog />} />
             <Route path="/produto/:id" element={<ProductDetail />} />
             <Route path="/pedido-confirmado" element={<OrderConfirmation />} />
+            <Route path="/rastreio" element={<Tracking />} />
             <Route path="/admin/*" element={<Admin />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALLs "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
