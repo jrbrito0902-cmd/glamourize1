@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { X, Loader2, CheckCircle, AlertTriangle, ArrowLeft, Clock, Copy, Check } from "lucide-react";
 import { Button } from "./ui/button";
 import { useCart } from "@/contexts/CartContext";
-import { urlFor } from "@/lib/sanity";
+import { urlFor, client } from "@/lib/sanity";
+import { useNavigate } from "react-router-dom";
 import PaymentBrick from "./PaymentBrick";
 
 interface CheckoutModalProps {
@@ -12,6 +13,7 @@ interface CheckoutModalProps {
 type Step = "form" | "loading" | "payment" | "success" | "pending" | "error";
 
 const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
+  const navigate = useNavigate();
   const { cart, total, grandTotal, selectedShipping, clearCart, destinationCep } = useCart();
   const [step, setStep] = useState<Step>("form");
   const [form, setForm] = useState({ name: "", email: "", cpf: "", phone: "" });
@@ -23,6 +25,28 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
   const [qrCodeBase64, setQrCodeBase64] = useState<string | null>(null);
   const [ticketUrl, setTicketUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // Consulta em tempo real se o Pix foi pago enquanto o usuário está na tela de pendente
+  useEffect(() => {
+    if (step !== "pending") return;
+
+    const interval = setInterval(async () => {
+      try {
+        const data = await client.fetch(
+          `*[_type == "order" && orderId == $orderId][0]{ status }`,
+          { orderId }
+        );
+        if (data && data.status === "paid") {
+          setStep("success");
+          clearInterval(interval);
+        }
+      } catch (err) {
+        console.error("Erro no polling de status:", err);
+      }
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [step, orderId]);
 
   const [address, setAddress] = useState({
     cep: destinationCep || "",
@@ -557,8 +581,14 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
               <p className="text-sm text-slate-600 max-w-xs">
                 Seu pedido <strong>#{orderId}</strong> foi confirmado. Enviamos os detalhes para <strong>{form.email}</strong>.
               </p>
-              <Button onClick={onClose} className="mt-2 bg-black text-white rounded-xl px-8 h-11 hover:bg-black/90 text-sm">
-                Fechar
+              <Button 
+                onClick={() => {
+                  onClose();
+                  navigate(`/rastreio?id=${orderId}&verify=${form.email}`);
+                }} 
+                className="mt-2 bg-black text-white rounded-xl px-8 h-11 hover:bg-black/90 text-sm font-bold uppercase tracking-wider"
+              >
+                Acompanhar Entrega →
               </Button>
             </div>
           )}

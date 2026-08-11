@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { client } from "@/lib/sanity";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -51,6 +51,7 @@ interface TrackingEvent {
 }
 
 const Tracking = () => {
+  const [searchParams] = useSearchParams();
   const [orderIdInput, setOrderIdInput] = useState("");
   const [verifyInput, setVerifyInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -69,13 +70,7 @@ const Tracking = () => {
       .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
   };
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!orderIdInput.trim() || !verifyInput.trim()) {
-      setError("Preencha todos os campos.");
-      return;
-    }
-
+  const runSearch = useCallback(async (targetOrderId: string, targetVerify: string) => {
     setLoading(true);
     setError(null);
     setOrder(null);
@@ -83,7 +78,7 @@ const Tracking = () => {
     setTrackingStatus(null);
     setTrackingNumber(null);
 
-    const cleanVerify = verifyInput.trim();
+    const cleanVerify = targetVerify.trim();
     const verifyCleanCpf = cleanVerify.replace(/\D/g, "");
 
     try {
@@ -101,7 +96,7 @@ const Tracking = () => {
       }`;
 
       const data = await client.fetch(query, {
-        orderId: orderIdInput.trim(),
+        orderId: targetOrderId.trim(),
         verify: cleanVerify,
         verifyCleanCpf: verifyCleanCpf
       });
@@ -146,6 +141,25 @@ const Tracking = () => {
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  useEffect(() => {
+    const id = searchParams.get("id");
+    const verify = searchParams.get("verify");
+    if (id && verify) {
+      setOrderIdInput(id);
+      setVerifyInput(verify);
+      runSearch(id, verify);
+    }
+  }, [searchParams, runSearch]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!orderIdInput.trim() || !verifyInput.trim()) {
+      setError("Preencha todos os campos.");
+      return;
+    }
+    runSearch(orderIdInput, verifyInput);
   };
 
   const getStatusDetails = (status: string) => {
