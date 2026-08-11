@@ -12,6 +12,7 @@ interface PaymentBrickProps {
   preferenceId: string;
   amount: number;
   payer: { name: string; email: string; cpf: string };
+  orderId: string;
   onPaymentSuccess: (paymentData: any) => void;
   onPaymentError: (error: any) => void;
 }
@@ -20,6 +21,7 @@ const PaymentBrick = ({
   preferenceId,
   amount,
   payer,
+  orderId,
   onPaymentSuccess,
   onPaymentError,
 }: PaymentBrickProps) => {
@@ -107,10 +109,14 @@ const PaymentBrick = ({
               },
               onSubmit: async ({ selectedPaymentMethod, formData }: any) => {
                 try {
+                  const payload = {
+                    ...formData,
+                    external_reference: orderId,
+                  };
                   const response = await fetch("/api/payment/process", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(formData),
+                    body: JSON.stringify(payload),
                   });
 
                   const result = await response.json();

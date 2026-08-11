@@ -117,6 +117,7 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
           payer: form,
           shippingFee: selectedShipping?.price,
           shippingMethod: selectedShipping?.name,
+          orderId: orderId,
         }),
       });
 
@@ -539,6 +540,7 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
                 preferenceId={preferenceId}
                 amount={grandTotal}
                 payer={form}
+                orderId={orderId}
                 onPaymentSuccess={handlePaymentSuccess}
                 onPaymentError={handlePaymentError}
               />

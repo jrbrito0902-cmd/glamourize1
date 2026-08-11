@@ -3,7 +3,7 @@ export default async function handler(req: any, res: any) {
     return res.status(405).json({ error: 'Método não permitido' });
   }
 
-  const { items, payer, shippingFee, shippingMethod } = req.body || {};
+  const { items, payer, shippingFee, shippingMethod, orderId } = req.body || {};
 
   if (!items || !Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ error: 'Carrinho vazio' });
@@ -51,7 +51,7 @@ export default async function handler(req: any, res: any) {
     },
     auto_return: 'approved',
     statement_descriptor: 'ESTILOVIP',
-    external_reference: `ORDER-${Date.now()}`
+    external_reference: orderId || `ORDER-${Date.now()}`
   };
 
   if (!token) {
