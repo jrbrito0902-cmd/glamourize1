@@ -122,6 +122,11 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
     if (!address.state.trim()) addrErrs.state = "Estado obrigatório";
     setAddressErrors(addrErrs);
 
+    if (!selectedShipping) {
+      setApiError("Por favor, calcule o frete e selecione uma forma de envio antes de continuar.");
+      return false;
+    }
+
     return Object.keys(errs).length === 0 && Object.keys(addrErrs).length === 0;
   };
 
