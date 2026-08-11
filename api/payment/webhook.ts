@@ -87,41 +87,51 @@ export default async function handler(req: any, res: any) {
           const protocol = req.headers['x-forwarded-proto'] || 'https';
           const siteUrl = `${protocol}://${host}`;
 
-          // Dispara envio do e-mail (que também faz a baixa de estoque)
-          fetch(`${siteUrl}/api/email/send`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              orderId: order.orderId,
-              payer: order.payer,
-              items: order.items,
-              total: order.total,
-              shippingFee: order.shipping?.price,
-              shippingMethod: order.shipping?.method
-            })
-          })
-          .then(res => res.json())
-          .then(resData => console.log("Resultado envio e-mail via Webhook:", resData))
-          .catch(err => console.error("Erro ao disparar e-mail via webhook:", err));
+          const promises: Promise<any>[] = [];
 
-          // Dispara geração da etiqueta no carrinho do Melhor Envio
-          if (order.shipping?.serviceId) {
-            fetch(`${siteUrl}/api/order/shipping-label`, {
+          // 1. Dispara envio do e-mail de pagamento aprovado (que também faz a baixa do estoque)
+          promises.push(
+            fetch(`${siteUrl}/api/email/send`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 orderId: order.orderId,
-                serviceId: order.shipping.serviceId,
                 payer: order.payer,
-                address: order.address,
                 items: order.items,
-                total: order.total
-              })
+                total: order.total,
+                shippingFee: order.shipping?.price,
+                shippingMethod: order.shipping?.method,
+                isPaid: true,
+              }),
             })
-            .then(res => res.json())
-            .then(resData => console.log("Resultado geração etiqueta via Webhook:", resData))
-            .catch(err => console.error("Erro ao gerar etiqueta de envio via webhook:", err));
+            .then((r) => r.json())
+            .then((d) => console.log("Resultado envio e-mail via Webhook:", d))
+            .catch((err) => console.error("Erro ao disparar e-mail via webhook:", err))
+          );
+
+          // 2. Dispara geração da etiqueta no carrinho do Melhor Envio
+          if (order.shipping?.serviceId) {
+            promises.push(
+              fetch(`${siteUrl}/api/order/shipping-label`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  orderId: order.orderId,
+                  serviceId: order.shipping.serviceId,
+                  payer: order.payer,
+                  address: order.address,
+                  items: order.items,
+                  total: order.total,
+                }),
+              })
+              .then((r) => r.json())
+              .then((d) => console.log("Resultado geração etiqueta via Webhook:", d))
+              .catch((err) => console.error("Erro ao gerar etiqueta de envio via webhook:", err))
+            );
           }
+
+          // Aguarda a conclusão das chamadas antes de encerrar a execução Serverless
+          await Promise.allSettled(promises);
         } else {
           console.log(`Pedido ${external_reference} já está marcado como pago. Pulando reprocessamento.`);
         }
