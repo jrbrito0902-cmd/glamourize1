@@ -198,6 +198,7 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
         shipping: {
           method: shippingName || "Entrega",
           price: shippingPrice || 0,
+          serviceId: shippingId || 0,
         },
         total: grandTotal,
       }),

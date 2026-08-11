@@ -82,6 +82,7 @@ export default {
       fields: [
         { name: "method", title: "Forma de Envio", type: "string" },
         { name: "price", title: "Valor do Frete (R$)", type: "number" },
+        { name: "serviceId", title: "ID do Serviço (Melhor Envio)", type: "number" },
       ],
     },
     {

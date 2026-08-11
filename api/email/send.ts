@@ -1,3 +1,5 @@
+import { createClient } from "@sanity/client";
+
 export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método não permitido' });
@@ -123,31 +125,48 @@ export default async function handler(req: any, res: any) {
   const writeToken = process.env.SANITY_WRITE_TOKEN;
   if (writeToken && items && items.length > 0) {
     try {
-      const mutations = items.map((item: any) => {
-        const prodId = item.productId || item.id;
-        // Trata ID composto se houver
-        const cleanId = prodId.split("-")[0].length > 10 ? prodId.split("-").slice(0, 5).join("-") : prodId;
-        return {
-          patch: {
-            id: cleanId,
-            dec: {
-              stock: Number(item.quantity || 1)
-            }
-          }
-        };
+      const sanityClient = createClient({
+        projectId: "cw81es59",
+        dataset: "production",
+        token: writeToken,
+        useCdn: false,
+        apiVersion: "2024-03-01",
       });
 
-      fetch(`https://cw81es59.api.sanity.io/v2024-03-01/data/mutate/production`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${writeToken}`
-        },
-        body: JSON.stringify({ mutations })
-      })
-      .then(res => res.json())
-      .then(data => console.log('Estoque atualizado no Sanity:', JSON.stringify(data)))
-      .catch(err => console.error('Erro ao atualizar estoque no Sanity:', err));
+      // Executa de forma assíncrona
+      (async () => {
+        for (const item of items) {
+          try {
+            const prodId = item.productId || item.id;
+            const cleanId = prodId.split("-")[0].length > 10 ? prodId.split("-").slice(0, 5).join("-") : prodId;
+            const targetSize = item.size;
+
+            if (!targetSize) continue;
+
+            // Busca o produto e encontra a chave do tamanho correspondente
+            const product = await sanityClient.fetch(
+              `*[_type == "product" && _id == $id][0]{ sizes }`,
+              { id: cleanId }
+            );
+
+            if (product && Array.isArray(product.sizes)) {
+              const sizeItem = product.sizes.find((s: any) => s.size === targetSize);
+              if (sizeItem && sizeItem._key) {
+                // Decrementa o estoque daquele tamanho específico
+                await sanityClient
+                  .patch(cleanId)
+                  .dec({
+                    [`sizes[_key == "${sizeItem._key}"].stock`]: Number(item.quantity || 1)
+                  })
+                  .commit();
+                console.log(`Estoque do tamanho ${targetSize} do produto ${cleanId} decrementado com sucesso.`);
+              }
+            }
+          } catch (itemErr) {
+            console.error(`Erro ao atualizar estoque para o item:`, itemErr);
+          }
+        }
+      })();
     } catch (err) {
       console.error('Erro ao preparar mutação de estoque:', err);
     }

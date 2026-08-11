@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação do Sistema - Estilo VIP</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background-color: #fff;
+        }
+        h1 {
+            color: #000;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 10px;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        h2 {
+            color: #1a1a1a;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 30px;
+            font-size: 20px;
+        }
+        h3 {
+            color: #333;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+            color: #000;
+        }
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+        code {
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #d14;
+        }
+        .highlight {
+            background-color: #fff9e6;
+            border-left: 4px solid #d4af37;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .step-list {
+            padding-left: 20px;
+        }
+        .step-list li {
+            margin-bottom: 15px;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #000;
+        }
+        @media print {
+            body {
+                margin: 20px;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Documentação do Sistema - Estilo VIP</h1>
+    <p>Esta documentação reúne todas as plataformas integradas no projeto, as chaves e tokens de configuração (variáveis de ambiente) e uma explicação detalhada de como funciona o fluxo completo de compra, pagamento e frete da loja.</p>
+
+    <h2>1. Plataformas Utilizadas e Links Úteis</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Plataforma</th>
+                <th>Função</th>
+                <th>Link de Acesso</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Vercel</strong></td>
+                <td>Hospedagem do site e execução das rotas de backend (APIs).</td>
+                <td><a href="https://vercel.com" target="_blank">vercel.com</a></td>
+            </tr>
+            <tr>
+                <td><strong>Sanity CMS</strong></td>
+                <td>Banco de dados (produtos, estoque, tamanhos e pedidos realizados).</td>
+                <td><a href="https://sanity.io/manage" target="_blank">sanity.io/manage</a></td>
+            </tr>
+            <tr>
+                <td><strong>Mercado Pago</strong></td>
+                <td>Processamento de pagamentos (Cartão de Crédito, Pix e Boleto).</td>
+                <td><a href="https://mercadopago.com.br" target="_blank">mercadopago.com.br</a></td>
+            </tr>
+            <tr>
+                <td><strong>Melhor Envio</strong></td>
+                <td>Cotação de frete, geração automática de etiquetas de postagem e rastreio.</td>
+                <td><a href="https://melhorenvio.com.br" target="_blank">melhorenvio.com.br</a></td>
+            </tr>
+            <tr>
+                <td><strong>Resend</strong></td>
+                <td>Disparo de e-mails de confirmação e recibo para os clientes.</td>
+                <td><a href="https://resend.com" target="_blank">resend.com</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>2. Tabela de Chaves e Tokens (Variáveis de Ambiente na Vercel)</h2>
+    <p>Essas chaves devem ser cadastradas nas configurações do seu projeto na Vercel (Settings > Environment Variables) para que as conexões funcionem com segurança:</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome da Variável na Vercel</th>
+                <th>Origem do Token / Painel</th>
+                <th>Descrição / Função</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>SANITY_WRITE_TOKEN</code></td>
+                <td>Painel do Sanity (API > Tokens)</td>
+                <td>Permissão para o site salvar novos pedidos e descontar estoque no banco de dados.</td>
+            </tr>
+            <tr>
+                <td><code>VITE_MERCADOPAGO_PUBLIC_KEY</code></td>
+                <td>Painel do Mercado Pago (Credenciais)</td>
+                <td>Chave pública do Mercado Pago, usada para carregar o formulário de pagamento no site.</td>
+            </tr>
+            <tr>
+                <td><code>MERCADOPAGO_ACCESS_TOKEN</code></td>
+                <td>Painel do Mercado Pago (Credenciais)</td>
+                <td>Token privado usado no backend para cobrar cartões, gerar QR Codes Pix e emitir boletos.</td>
+            </tr>
+            <tr>
+                <td><code>MELHOR_ENVIO_TOKEN</code></td>
+                <td>Painel do Melhor Envio (Tokens de Acesso)</td>
+                <td>Token privado usado para calcular o frete e enviar a etiqueta direto para o seu carrinho do Melhor Envio.</td>
+            </tr>
+            <tr>
+                <td><code>MELHOR_ENVIO_POSTAL_CODE</code></td>
+                <td>Seu CEP de Origem</td>
+                <td>O CEP do seu endereço de coleta de onde as roupas serão enviadas.</td>
+            </tr>
+            <tr>
+                <td><code>MELHOR_ENVIO_SANDBOX</code></td>
+                <td>Configuração do Ambiente</td>
+                <td>Define se o frete está em ambiente de testes (<code>true</code>) ou de vendas reais (<code>false</code>).</td>
+            </tr>
+            <tr>
+                <td><code>RESEND_API_KEY</code></td>
+                <td>Painel do Resend (API Keys)</td>
+                <td>Chave que autoriza o site a disparar e-mails utilizando sua conta do Resend.</td>
+            </tr>
+            <tr>
+                <td><code>EMAIL_FROM</code></td>
+                <td>Personalizado</td>
+                <td>O e-mail de remetente que o cliente verá (ex: <code>Estilo VIP &lt;contato@nobledecants.com.br&gt;</code>).</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>3. Como Funciona o Sistema (O Fluxo do Pedido)</h2>
+    <p>O sistema foi desenhado de forma 100% autônoma para processar as vendas automaticamente:</p>
+    
+    <ul class="step-list">
+        <li>
+            <span class="step-title">1. Cálculo de Frete:</span> O cliente digita o CEP no carrinho. O site envia os dados para a rota <code>/api/shipping/calculate</code>. O peso é calculado automaticamente a <strong>500g por peça</strong> (envelope de segurança). A rota formata a lista para exibir opções amigáveis (Correios PAC, Correios SEDEX, Jadlog, Loggi).
+        </li>
+        <li>
+            <span class="step-title">2. Fechamento do Pedido:</span> O site valida todas as entradas. Se o usuário preencher o formulário mas não tiver selecionado uma forma de envio, o sistema impede o avanço e exibe um erro em vermelho.
+        </li>
+        <li>
+            <span class="step-title">3. Processamento de Pagamento:</span> Ao clicar em pagar, o Mercado Pago gera a transação e vincula o ID do pedido (ex: <code>EV-123456</code>) ao campo <code>external_reference</code>.
+        </li>
+        <li>
+            <span class="step-title">4. Aprovação & Webhook do Mercado Pago:</span> O cliente realiza o pagamento. O Mercado Pago faz um disparo automático para a nossa rota <code>/api/payment/webhook</code>. O site recebe a notificação e:
+            <ul>
+                <li>Muda o status do pedido no Sanity para <strong>"Pago"</strong> (<code>paid</code>) e reduz o estoque do produto.</li>
+                <li>Gera a etiqueta de envio com todos os dados do cliente e a **insere direto no carrinho do seu Melhor Envio** para você apenas imprimir e colar.</li>
+                <li>Dispara um e-mail com layout premium preto e ouro para o comprador via Resend.</li>
+            </ul>
+        </li>
+        <li>
+            <span class="step-title">5. Atualização em tempo real (Pix):</span> Se o cliente pagou por Pix, a tela dele do site detecta o pagamento de forma automática em menos de 4 segundos e o redireciona direto para a página de rastreamento com todos os dados preenchidos.
+        </li>
+        <li>
+            <span class="step-title">6. Despacho & Webhook do Melhor Envio:</span> Quando você postar o pacote no balcão da transportadora (ou quando o pacote for entregue na casa do cliente), o Melhor Envio dispara um aviso automático para <code>/api/shipping/webhook</code>. O site recebe o sinal, busca o pedido correspondente e altera o status para <strong>"Enviado"</strong> (<code>shipped</code>) ou <strong>"Entregue"</strong> (<code>delivered</code>) automaticamente.
+        </li>
+    </ul>
+
+    <div class="highlight no-print">
+        <strong>💡 Dica para salvar como PDF:</strong> Abra este arquivo HTML em qualquer navegador (Chrome, Edge, etc.), aperte as teclas <strong>Ctrl + P</strong> no seu teclado (ou clique com o botão direito e escolha "Imprimir"), selecione a impressora <strong>"Salvar como PDF"</strong> e clique em Salvar!
+    </div>
+</body>
+</html>

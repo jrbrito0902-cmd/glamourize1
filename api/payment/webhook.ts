@@ -55,23 +55,78 @@ export default async function handler(req: any, res: any) {
         apiVersion: "2024-03-01",
       });
 
-      // Busca o ID do documento do pedido correspondente no Sanity
+      // Busca o documento do pedido correspondente no Sanity
       const orderDocs = await sanityClient.fetch(
-        `*[_type == "order" && orderId == $orderId]{ _id }`,
+        `*[_type == "order" && orderId == $orderId]{
+          _id,
+          orderId,
+          status,
+          payer,
+          address,
+          items,
+          shipping,
+          total
+        }`,
         { orderId: external_reference }
       );
 
       if (orderDocs && orderDocs.length > 0) {
-        const orderDocId = orderDocs[0]._id;
+        const order = orderDocs[0];
 
-        // Atualiza o status do pedido para "paid" (pago)
-        await sanityClient
-          .patch(orderDocId)
-          .set({ status: "paid" })
-          .commit();
+        if (order.status !== "paid") {
+          // Atualiza o status do pedido para "paid" (pago)
+          await sanityClient
+            .patch(order._id)
+            .set({ status: "paid" })
+            .commit();
 
-        console.log(`Sucesso: Pedido ${external_reference} atualizado para 'paid' no Sanity.`);
-        return res.status(200).json({ status: "success", message: `Pedido ${external_reference} pago` });
+          console.log(`Sucesso: Pedido ${external_reference} atualizado para 'paid' no Sanity.`);
+
+          // Dispara e-mail de confirmação e geração da etiqueta de envio
+          const host = req.headers.host || 'e-estilo-vip.vercel.app';
+          const protocol = req.headers['x-forwarded-proto'] || 'https';
+          const siteUrl = `${protocol}://${host}`;
+
+          // Dispara envio do e-mail (que também faz a baixa de estoque)
+          fetch(`${siteUrl}/api/email/send`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              orderId: order.orderId,
+              payer: order.payer,
+              items: order.items,
+              total: order.total,
+              shippingFee: order.shipping?.price,
+              shippingMethod: order.shipping?.method
+            })
+          })
+          .then(res => res.json())
+          .then(resData => console.log("Resultado envio e-mail via Webhook:", resData))
+          .catch(err => console.error("Erro ao disparar e-mail via webhook:", err));
+
+          // Dispara geração da etiqueta no carrinho do Melhor Envio
+          if (order.shipping?.serviceId) {
+            fetch(`${siteUrl}/api/order/shipping-label`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                orderId: order.orderId,
+                serviceId: order.shipping.serviceId,
+                payer: order.payer,
+                address: order.address,
+                items: order.items,
+                total: order.total
+              })
+            })
+            .then(res => res.json())
+            .then(resData => console.log("Resultado geração etiqueta via Webhook:", resData))
+            .catch(err => console.error("Erro ao gerar etiqueta de envio via webhook:", err));
+          }
+        } else {
+          console.log(`Pedido ${external_reference} já está marcado como pago. Pulando reprocessamento.`);
+        }
+
+        return res.status(200).json({ status: "success", message: `Pedido ${external_reference} pago e processado` });
       } else {
         console.warn(`Aviso: Pedido com ID ${external_reference} não foi encontrado no Sanity.`);
         return res.status(404).json({ error: "Pedido correspondente não encontrado no Sanity" });

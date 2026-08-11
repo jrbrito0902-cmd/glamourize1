@@ -64,6 +64,7 @@ export default async function handler(req: any, res: any) {
         _type: "object",
         method: shipping?.method || "Não selecionado",
         price: Number(shipping?.price || 0),
+        serviceId: Number(shipping?.serviceId || 0),
       },
       total: Number(total),
     };
