@@ -166,27 +166,29 @@ const CheckoutModal = ({ onClose }: CheckoutModalProps) => {
       }),
     })
       .then((res) => res.json())
-      .then((data) => console.log("Pedido salvo no Sanity:", data))
-      .catch((err) => console.error("Erro ao salvar pedido no Sanity:", err));
-
-    // Adiciona automaticamente ao carrinho do Melhor Envio para geração de etiqueta
-    if (selectedShipping?.id) {
-      fetch("/api/order/shipping-label", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderId,
-          serviceId: selectedShipping.id,
-          payer: form,
-          address: address,
-          items: cart,
-          total: grandTotal,
-        }),
+      .then((data) => {
+        console.log("Pedido salvo no Sanity:", data);
+        
+        // Adiciona ao carrinho do Melhor Envio apenas DEPOIS que o pedido foi criado no Sanity
+        if (selectedShipping?.id) {
+          fetch("/api/order/shipping-label", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              orderId,
+              serviceId: selectedShipping.id,
+              payer: form,
+              address: address,
+              items: cart,
+              total: grandTotal,
+            }),
+          })
+            .then((res) => res.json())
+            .then((labelData) => console.log("Etiqueta enviada ao Melhor Envio:", labelData))
+            .catch((err) => console.error("Erro ao gerar etiqueta no Melhor Envio:", err));
+        }
       })
-        .then((res) => res.json())
-        .then((data) => console.log("Etiqueta enviada ao Melhor Envio:", data))
-        .catch((err) => console.error("Erro ao gerar etiqueta no Melhor Envio:", err));
-    }
+      .catch((err) => console.error("Erro ao salvar pedido no Sanity:", err));
 
     clearCart();
 
