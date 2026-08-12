@@ -157,9 +157,16 @@ const CartDrawer = () => {
               </div>
             </div>
 
+            {!selectedShipping && (
+              <p className="text-center text-xs font-semibold text-orange-600 mb-1 animate-pulse">
+                ⚠️ Calcule o frete e escolha uma opção para continuar
+              </p>
+            )}
+
             <Button
               onClick={openCheckout}
-              className="w-full h-14 text-base bg-black hover:bg-black/90 text-white font-bold rounded-xl uppercase tracking-widest shadow-md transition-all"
+              disabled={!selectedShipping}
+              className="w-full h-14 text-base bg-black hover:bg-black/90 text-white font-bold rounded-xl uppercase tracking-widest shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Finalizar Compra
             </Button>
