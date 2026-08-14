@@ -9,7 +9,6 @@ const navLinks = [
   { label: "Serviços", href: "/#servicos" },
   { label: "Rastreio", href: "/rastreio" },
   { label: "Sobre", href: "/#sobre" },
-  { label: "Depoimentos", href: "/#depoimentos" },
   { label: "Contato", href: "/#contato" },
 ];
 
@@ -58,16 +57,6 @@ const Header = () => {
           </nav>
           
           <div className="h-4 w-[1px] bg-black/10 mx-2" />
-          
-          <a
-            href="https://www.instagram.com/estilomodas.vip/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-foreground/70 hover:text-primary transition-colors"
-            aria-label="Instagram"
-          >
-            <Instagram size={18} strokeWidth={1.5} />
-          </a>
 
           {/* Carrinho */}
           <button
@@ -86,15 +75,6 @@ const Header = () => {
 
         {/* Mobile toggle */}
         <div className="flex md:hidden items-center gap-3">
-          <a
-            href="https://www.instagram.com/estilomodas.vip/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary"
-            aria-label="Instagram"
-          >
-            <Instagram size={18} strokeWidth={1.5} />
-          </a>
           {/* Carrinho mobile */}
           <button
             onClick={openCart}
@@ -134,17 +114,6 @@ const Header = () => {
               {link.label}
             </Link>
           ))}
-          <div className="px-8 mt-4 pt-6 border-t border-black/5">
-             <a
-              href="https://www.instagram.com/estilomodas.vip/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 text-foreground/70 hover:text-primary transition-colors text-[11px] font-semibold uppercase tracking-[0.2em]"
-            >
-              <Instagram size={18} strokeWidth={1.5} />
-              Instagram
-            </a>
-          </div>
         </nav>
       )}
     </header>

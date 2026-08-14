@@ -17,33 +17,30 @@ const Footer = () => {
               Confecção & Estamparia • São Paulo, SP
             </p>
           </div>
-
-          <div className="flex items-center gap-8">
-            <a
-              href="https://www.instagram.com/estilomodas.vip/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-foreground/40 hover:text-black transition-colors"
-              aria-label="Instagram"
-            >
-              <Instagram className="w-5 h-5 stroke-[1.5px]" />
-            </a>
-            <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-foreground/40 hover:text-black transition-colors"
-              aria-label="Facebook"
-            >
-              <Facebook className="w-5 h-5 stroke-[1.5px]" />
-            </a>
-          </div>
         </div>
 
-        <div className="mt-20 pt-8 text-center border-t border-black/5">
+        <div className="mt-20 pt-8 text-center border-t border-black/5 flex flex-col items-center gap-2">
           <p className="text-foreground/20 text-[10px] uppercase tracking-[0.3em] font-medium">
             © {new Date().getFullYear()} Estilo Modas. Todos os direitos
             reservados.
+          </p>
+          <p className="text-foreground/20 text-[9px] uppercase tracking-[0.2em] font-light flex flex-wrap justify-center gap-x-2">
+            <span>Desenvolvido por</span>
+            <a
+              href="https://jrbritodev.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors underline font-medium"
+            >
+              JrBrito
+            </a>
+            <span>•</span>
+            <a
+              href="mailto:jrbrito.0902@gmail.com"
+              className="hover:text-primary transition-colors underline"
+            >
+              jrbrito.0902@gmail.com
+            </a>
           </p>
         </div>
       </div>
