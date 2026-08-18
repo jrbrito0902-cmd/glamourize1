@@ -6,7 +6,7 @@ export default defineConfig({
   name: "default",
   title: "GLAMOURIZE Admin",
 
-  projectId: "cw81es59",
+  projectId: "kmz5dgd0",
   dataset: "production",
   apiVersion: "2024-03-01",
 
