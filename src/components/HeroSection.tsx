@@ -19,15 +19,13 @@ const HeroSection = () => {
 
       <div className="container relative z-10 py-20 flex flex-col items-center text-center">
         <div className="max-w-4xl animate-fade-up">
-          <p className="text-white font-body text-[10px] md:text-xs uppercase tracking-[0.5em] mb-8 font-semibold">
+          <h1 className="font-display text-7xl md:text-9xl lg:text-[10rem] text-white mb-4 leading-none tracking-tight font-light italic drop-shadow-md">
+            Glamourize
+          </h1>
+          <p className="text-white/90 font-body text-[10px] md:text-xs uppercase tracking-[0.55em] mb-12 font-semibold drop-shadow-sm">
             Coleção Exclusiva & Alta Costura
           </p>
-          <h1 className="heading-xl text-white mb-8 leading-[1.1] font-medium italic">
-            Sua Essência,
-            <br />
-            <span className="not-italic font-semibold">Refletida em Elegância</span>
-          </h1>
-          <p className="text-white/90 font-body text-sm md:text-md mb-12 max-w-xl mx-auto leading-relaxed tracking-wide">
+          <p className="text-white/90 font-body text-sm md:text-md mb-12 max-w-xl mx-auto leading-relaxed tracking-wide drop-shadow-sm">
             Descubra a melhor moda feminina na Glamourize. Peças exclusivas, tecidos nobres e caimento impecável para destacar a sua personalidade em qualquer ocasião.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
