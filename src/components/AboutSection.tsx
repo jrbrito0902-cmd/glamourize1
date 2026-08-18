@@ -42,7 +42,7 @@ const AboutSection = () => {
             <div className="aspect-[4/5] rounded-lg bg-secondary overflow-hidden flex items-center justify-center">
               <div className="text-center p-8">
                 <span className="font-display text-7xl md:text-8xl text-primary block leading-none">
-                  10+
+                  5+
                 </span>
                 <span className="font-display text-2xl text-secondary-foreground tracking-wider mt-2 block">
                   Anos de

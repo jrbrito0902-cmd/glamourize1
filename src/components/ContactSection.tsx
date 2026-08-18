@@ -14,12 +14,7 @@ const ContactSection = () => {
       value: "(11) 94918-4803",
       href: "https://wa.me/5511949184803?text=Olá! Gostaria de saber mais sobre a Glamourize.",
     },
-    {
-      icon: Mail,
-      label: "Email",
-      value: "eutimia.modas@hotmail.com",
-      href: "mailto:eutimia.modas@hotmail.com",
-    },
+
     {
       icon: Clock,
       label: "Horário",
