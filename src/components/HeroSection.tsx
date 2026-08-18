@@ -20,21 +20,21 @@ const HeroSection = () => {
       <div className="container relative z-10 py-20 flex flex-col items-center text-center">
         <div className="max-w-4xl animate-fade-up">
           <p className="text-white font-body text-[10px] md:text-xs uppercase tracking-[0.5em] mb-8 font-semibold">
-            Confecção & Estamparia em São Paulo
+            Coleção Exclusiva & Alta Costura
           </p>
           <h1 className="heading-xl text-white mb-8 leading-[1.1] font-medium italic">
-            Expressando sua
+            Sua Essência,
             <br />
-            <span className="not-italic font-semibold">Melhor Versão</span>
+            <span className="not-italic font-semibold">Refletida em Elegância</span>
           </h1>
           <p className="text-white/90 font-body text-sm md:text-md mb-12 max-w-xl mx-auto leading-relaxed tracking-wide">
-            Especialistas em moda feminina com peças exclusivas, fabricação própria e estamparia profissional para o seu dia a dia.
+            Descubra a curadoria de moda feminina da Glamourize. Peças exclusivas, tecidos nobres e caimento impecável para destacar a sua personalidade em qualquer ocasião.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <a href="#catalogo" className="btn-luxury bg-white text-black border-white hover:bg-transparent hover:text-white">
+            <a href="#catalogo" className="btn-luxury bg-white text-black border-white hover:bg-transparent hover:text-white rounded-md">
               Conheça nossa Loja
             </a>
-            <a href="#contato" className="btn-luxury text-white border-white hover:bg-white hover:text-black">
+            <a href="#contato" className="btn-luxury text-white border-white hover:bg-white hover:text-black rounded-md">
               Fale Conosco
             </a>
           </div>
