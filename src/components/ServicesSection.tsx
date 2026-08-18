@@ -1,23 +1,23 @@
-import { Scissors, Palette, Shirt } from "lucide-react";
+import { Sparkles, ShoppingBag, UserCheck } from "lucide-react";
 
 const services = [
   {
-    icon: Scissors,
-    title: "Confecção de Roupas",
+    icon: ShoppingBag,
+    title: "Curadoria de Moda",
     description:
-      "Produção completa de peças com acabamento impecável, do corte à costura final. Qualidade e atenção a cada detalhe.",
+      "Seleção cuidadosa de peças femininas que combinam elegância, sofisticação e as maiores tendências da moda atual.",
   },
   {
-    icon: Palette,
-    title: "Coleções Exclusivas",
+    icon: Sparkles,
+    title: "Looks Exclusivos",
     description:
-      "Lançamentos semanais de peças exclusivas fabricadas por nós, garantindo que você tenha acesso às melhores tendências com qualidade premium.",
+      "Lançamentos semanais de novidades e peças selecionadas, garantindo variedade e exclusividade para o seu guarda-roupa.",
   },
   {
-    icon: Shirt,
-    title: "Estamparia de Roupas",
+    icon: UserCheck,
+    title: "Atendimento Consultivo",
     description:
-      "Estampas vibrantes e duráveis em diversos tecidos. Tecnologia de ponta para resultados profissionais.",
+      "Auxílio personalizado no Tatuapé para encontrar as peças que melhor se ajustam ao seu corpo e estilo pessoal.",
   },
 ];
 

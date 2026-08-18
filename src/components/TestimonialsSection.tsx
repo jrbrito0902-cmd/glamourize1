@@ -2,18 +2,18 @@ import { Star } from "lucide-react";
 
 const testimonials = [
   {
-    name: "Mariana S.",
-    text: "Incrível! As roupas ficaram perfeitas, com acabamento impecável. A equipe entendeu exatamente o que eu queria. Recomendo demais!",
+    name: "Raquel Galhego",
+    text: "Loja linda, comprei dois vestidos que ficaram incríveis!! Era o que eu estava pensando para me animar",
     rating: 5,
   },
   {
-    name: "Carlos R.",
-    text: "Fiz uma encomenda de camisetas personalizadas para minha empresa e o resultado superou as expectativas. Estampas de altíssima qualidade!",
+    name: "Andreus Toledo",
+    text: "Fui super bem atendido, fica super perto do metrô, subindo a Tuiuti, segunda direita, loja Rosa.",
     rating: 5,
   },
   {
-    name: "Fernanda L.",
-    text: "Atendimento excelente e peças de qualidade excepcional. A Glamourize entregou tudo no prazo e com um carinho especial. Já sou cliente fiel!",
+    name: "Bruna Araujo",
+    text: "A melhor loja do Tatuapé! Peças incríveis, atendimento super simpático e ambiente super agradável. Sempre encontro os looks perfeitos.",
     rating: 5,
   },
 ];

@@ -14,7 +14,7 @@ const Footer = () => {
               Glamourize
             </Link>
             <p className="text-foreground/40 text-[11px] uppercase tracking-[0.2em] mt-4 font-medium">
-              Confecção & Estamparia • São Paulo, SP
+              Moda Feminina & Elegância • Tatuapé, São Paulo
             </p>
           </div>
         </div>

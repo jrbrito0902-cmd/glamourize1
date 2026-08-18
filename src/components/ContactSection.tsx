@@ -11,8 +11,8 @@ const ContactSection = () => {
     {
       icon: MessageCircle,
       label: "WhatsApp",
-      value: "(11) 95450-5858",
-      href: "https://wa.me/5511954505858?text=Olá! Gostaria de saber mais sobre a Glamourize.",
+      value: "(11) 94918-4803",
+      href: "https://wa.me/5511949184803?text=Olá! Gostaria de saber mais sobre a Glamourize.",
     },
     {
       icon: Mail,
@@ -23,7 +23,7 @@ const ContactSection = () => {
     {
       icon: Clock,
       label: "Horário",
-      value: "Seg-Sex: 9h às 18h | Sáb: 9h às 13h",
+      value: "Seg-Qui: 9:30 às 18:30 | Sex-Sáb: 9:30 às 19:00 | Dom: Fechado",
     },
   ];
 
