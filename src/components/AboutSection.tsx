@@ -1,7 +1,7 @@
 import { CheckCircle } from "lucide-react";
 
 const highlights = [
-  "Curadoria e Design Exclusivo",
+  "Estilo e Design Exclusivo",
   "Caimento e Alta Costura",
   "Tecidos e Acabamentos Nobres",
   "Atendimento Personalizado no Tatuapé",

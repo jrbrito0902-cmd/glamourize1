@@ -28,7 +28,7 @@ const HeroSection = () => {
             <span className="not-italic font-semibold">Refletida em Elegância</span>
           </h1>
           <p className="text-white/90 font-body text-sm md:text-md mb-12 max-w-xl mx-auto leading-relaxed tracking-wide">
-            Descubra a curadoria de moda feminina da Glamourize. Peças exclusivas, tecidos nobres e caimento impecável para destacar a sua personalidade em qualquer ocasião.
+            Descubra a melhor moda feminina na Glamourize. Peças exclusivas, tecidos nobres e caimento impecável para destacar a sua personalidade em qualquer ocasião.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <a href="#catalogo" className="btn-luxury bg-white text-black border-white hover:bg-transparent hover:text-white rounded-md">

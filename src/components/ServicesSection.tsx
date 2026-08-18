@@ -3,9 +3,9 @@ import { Sparkles, ShoppingBag, UserCheck } from "lucide-react";
 const services = [
   {
     icon: ShoppingBag,
-    title: "Curadoria de Moda",
+    title: "Seleção de Roupas",
     description:
-      "Seleção cuidadosa de peças femininas que combinam elegância, sofisticação e as maiores tendências da moda atual.",
+      "Escolha de peças femininas que combinam elegância, sofisticação e as maiores tendências da moda atual.",
   },
   {
     icon: Sparkles,
