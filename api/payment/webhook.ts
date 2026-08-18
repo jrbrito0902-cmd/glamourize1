@@ -48,7 +48,7 @@ export default async function handler(req: any, res: any) {
     // 2. Se o pagamento foi aprovado, atualiza o status do pedido correspondente no Sanity
     if (status === "approved" && external_reference) {
       const sanityClient = createClient({
-        projectId: "cw81es59",
+        projectId: "kmz5dgd0",
         dataset: "production",
         token: writeToken,
         useCdn: false,

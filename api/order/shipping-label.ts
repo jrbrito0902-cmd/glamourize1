@@ -160,7 +160,7 @@ export default async function handler(req: any, res: any) {
       if (writeToken) {
         try {
           const sanityClient = createClient({
-            projectId: "cw81es59",
+            projectId: "kmz5dgd0",
             dataset: "production",
             token: writeToken,
             useCdn: false,
@@ -197,7 +197,7 @@ export default async function handler(req: any, res: any) {
     if (writeToken && data.id) {
       try {
         const sanityClient = createClient({
-          projectId: "cw81es59",
+          projectId: "kmz5dgd0",
           dataset: "production",
           token: writeToken,
           useCdn: false,

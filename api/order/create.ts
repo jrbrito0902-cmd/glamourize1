@@ -23,7 +23,7 @@ export default async function handler(req: any, res: any) {
   }
 
   const client = createClient({
-    projectId: "cw81es59",
+    projectId: "kmz5dgd0",
     dataset: "production",
     token: writeToken,
     useCdn: false,
