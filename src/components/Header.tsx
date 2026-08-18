@@ -38,7 +38,7 @@ const Header = () => {
           className="font-display text-2xl tracking-tight text-primary font-semibold italic"
           onClick={() => setOpen(false)}
         >
-          Estilo Modas
+          Glamourize
         </Link>
 
         {/* Desktop nav */}

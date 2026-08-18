@@ -83,7 +83,7 @@ export default async function handler(req: any, res: any) {
           console.log(`Sucesso: Pedido ${external_reference} atualizado para 'paid' no Sanity.`);
 
           // Dispara e-mail de confirmação e geração da etiqueta de envio
-          const host = req.headers.host || 'e-estilo-vip.vercel.app';
+          const host = req.headers.host || 'glamourize.vercel.app';
           const protocol = req.headers['x-forwarded-proto'] || 'https';
           const siteUrl = `${protocol}://${host}`;
 

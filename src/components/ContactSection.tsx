@@ -5,13 +5,14 @@ const ContactSection = () => {
     {
       icon: MapPin,
       label: "Endereço",
-      value: "São Paulo, SP - Brasil",
+      value: "Rua Tijuco Preto, 131 - Tatuapé, São Paulo - SP",
+      href: "https://www.google.com/maps/place/Glamourize/@-23.5444327,-46.5769699,17z/data=!4m6!3m5!1s0x94ce5f7641dd9de3:0xbbf88274b344bb43!8m2!3d-23.5444376!4d-46.574395!16s%2Fg%2F11j79rxgkf?entry=ttu",
     },
     {
       icon: MessageCircle,
       label: "WhatsApp",
       value: "(11) 95450-5858",
-      href: "https://wa.me/5511954505858?text=Olá! Gostaria de saber mais sobre os serviços da E-Estilo Modas.",
+      href: "https://wa.me/5511954505858?text=Olá! Gostaria de saber mais sobre a Glamourize.",
     },
     {
       icon: Mail,
@@ -70,8 +71,8 @@ const ContactSection = () => {
           {/* Google Maps */}
           <div className="rounded-lg overflow-hidden shadow-card h-64">
             <iframe
-              title="Localização Estilo Modas"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d467692.0488591707!2d-46.87529809999999!3d-23.6820635!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce448183a461d1%3A0x9ba94b08ff335bae!2sS%C3%A3o%20Paulo%2C%20SP!5e0!3m2!1spt-BR!2sbr!4v1710000000000"
+              title="Localização Glamourize"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.485121651322!2d-46.5769733!3d-23.5444376!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce5f7641dd9de3%3A0xbbf88274b344bb43!2sGlamourize!5e0!3m2!1spt-BR!2sbr!4v1710000000000"
               width="100%"
               height="100%"
               style={{ border: 0 }}

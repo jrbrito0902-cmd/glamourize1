@@ -71,9 +71,9 @@ export default async function handler(req: any, res: any) {
 
   // Dados de origem (lojista)
   const fromData = {
-    name: process.env.MELHOR_ENVIO_FROM_NAME || "Estilo VIP",
+    name: process.env.MELHOR_ENVIO_FROM_NAME || "Glamourize",
     phone: process.env.MELHOR_ENVIO_FROM_PHONE || "11999999999",
-    email: process.env.MELHOR_ENVIO_FROM_EMAIL || "contato@estilovip.com.br",
+    email: process.env.MELHOR_ENVIO_FROM_EMAIL || "contato@glamourize.com.br",
     document: process.env.MELHOR_ENVIO_FROM_DOCUMENT || "",
     address: process.env.MELHOR_ENVIO_FROM_ADDRESS || "",
     number: process.env.MELHOR_ENVIO_FROM_NUMBER || "S/N",
@@ -128,7 +128,7 @@ export default async function handler(req: any, res: any) {
       own_hand: false,
       reverse: false,
       non_commercial: false,
-      platform: "EstiloVIP",
+      platform: "Glamourize",
       tags: [
         {
           tag: orderId,
@@ -145,7 +145,7 @@ export default async function handler(req: any, res: any) {
         Accept: "application/json",
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-        "User-Agent": "EstiloVIP (contato@estilovip.com.br)",
+        "User-Agent": "Glamourize (contato@glamourize.com.br)",
       },
       body: JSON.stringify(payload),
     });

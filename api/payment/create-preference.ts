@@ -40,7 +40,7 @@ export default async function handler(req: any, res: any) {
   const preferenceData = {
     items: mpItems,
     payer: {
-      name: payer.name || 'Cliente Estilo VIP',
+      name: payer.name || 'Cliente Glamourize',
       email: payer.email,
       identification: payer.cpf ? { type: 'CPF', number: payer.cpf.replace(/\D/g, '') } : undefined
     },
@@ -50,7 +50,7 @@ export default async function handler(req: any, res: any) {
       pending: `${originUrl}/pedido-confirmado?status=pending`
     },
     auto_return: 'approved',
-    statement_descriptor: 'ESTILOVIP',
+    statement_descriptor: 'GLAMOURIZE',
     external_reference: orderId || `ORDER-${Date.now()}`
   };
 

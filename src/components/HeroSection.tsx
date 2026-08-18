@@ -11,7 +11,7 @@ const HeroSection = () => {
       <div className="absolute inset-0">
         <img
           src={heroBg}
-          alt="Estilo Modas"
+          alt="Glamourize"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/30" />

@@ -67,7 +67,7 @@ export default async function handler(req: any, res: any) {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
-        'User-Agent': 'EstiloVIP (contato@estilovip.com.br)'
+        'User-Agent': 'Glamourize (contato@glamourize.com.br)'
       },
       body: JSON.stringify({
         from: { postal_code: cepOrigem.replace(/\D/g, '') },

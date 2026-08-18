@@ -17,7 +17,7 @@ const AboutSection = () => {
             <p className="text-primary font-body text-sm uppercase tracking-[0.3em] mb-3 font-medium">
               Quem somos
             </p>
-            <h2 className="heading-section mb-6">Sobre a E.Estilo Modas</h2>
+            <h2 className="heading-section mb-6">Sobre a Glamourize</h2>
             <p className="text-muted-foreground leading-relaxed mb-6">
               Somos uma confecção localizada em São Paulo, SP, focada em
               criar peças que celebram a feminilidade e a autoestima de cada mulher. 

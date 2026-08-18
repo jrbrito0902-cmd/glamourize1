@@ -4,7 +4,7 @@ import { schemaTypes } from "../sanity/schema";
 
 export default defineConfig({
   name: "default",
-  title: "E.ESTILO MODAS Admin",
+  title: "GLAMOURIZE Admin",
 
   projectId: "cw81es59",
   dataset: "production",

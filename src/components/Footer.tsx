@@ -11,7 +11,7 @@ const Footer = () => {
               to="/"
               className="font-display text-3xl tracking-tight text-primary font-semibold italic"
             >
-              Estilo Modas
+              Glamourize
             </Link>
             <p className="text-foreground/40 text-[11px] uppercase tracking-[0.2em] mt-4 font-medium">
               Confecção & Estamparia • São Paulo, SP
@@ -21,7 +21,7 @@ const Footer = () => {
 
         <div className="mt-20 pt-8 text-center border-t border-black/5 flex flex-col items-center gap-2">
           <p className="text-foreground text-[10px] uppercase tracking-[0.3em] font-medium">
-            © {new Date().getFullYear()} Estilo Modas. Todos os direitos
+            © {new Date().getFullYear()} Glamourize. Todos os direitos
             reservados.
           </p>
           <p className="text-foreground text-[9px] uppercase tracking-[0.2em] font-light flex flex-wrap justify-center gap-x-2">

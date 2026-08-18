@@ -12,7 +12,7 @@ export default async function handler(req: any, res: any) {
   }
 
   const apiKey = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.EMAIL_FROM || 'Estilo VIP <onboarding@resend.dev>';
+  const fromEmail = process.env.EMAIL_FROM || 'Glamourize <onboarding@resend.dev>';
 
 
   const itemsHtml = (items || [])
@@ -37,7 +37,7 @@ export default async function handler(req: any, res: any) {
         
         <!-- Header Elegante (Preto e Ouro) -->
         <div style="background-color: #000000; padding: 35px 20px; text-align: center; border-bottom: 3px solid #d4af37;">
-          <h1 style="color: #ffffff; font-size: 26px; margin: 0; font-weight: 300; letter-spacing: 6px; text-transform: uppercase; font-family: Georgia, serif;">ESTILO VIP</h1>
+          <h1 style="color: #ffffff; font-size: 26px; margin: 0; font-weight: 300; letter-spacing: 6px; text-transform: uppercase; font-family: Georgia, serif;">GLAMOURIZE</h1>
           <p style="color: #d4af37; font-size: 10px; margin: 5px 0 0 0; letter-spacing: 4px; text-transform: uppercase; font-weight: bold;">
             ${isPaid ? "Pagamento Aprovado" : "Pedido Recebido"}
           </p>
@@ -117,7 +117,7 @@ export default async function handler(req: any, res: any) {
 
         <!-- Footer -->
         <div style="background-color: #fafafa; padding: 25px 20px; text-align: center; border-top: 1px solid #f0f0f5; font-size: 11px; color: #888888;">
-          <p style="margin: 0 0 5px 0; font-weight: bold; color: #333; text-transform: uppercase; letter-spacing: 1px;">Estilo VIP</p>
+          <p style="margin: 0 0 5px 0; font-weight: bold; color: #333; text-transform: uppercase; letter-spacing: 1px;">Glamourize</p>
           <p style="margin: 0 0 15px 0;">Moda, Elegância e Atendimento Exclusivo</p>
           <p style="margin: 0; font-size: 10px; color: #aaa;">Esta é uma mensagem automática. Por favor, não responda a este e-mail.</p>
         </div>
@@ -197,8 +197,8 @@ export default async function handler(req: any, res: any) {
         from: fromEmail,
         to: [payer.email],
         subject: isPaid 
-          ? `Pagamento Aprovado! Estilo VIP #${orderId || ''}`
-          : `Confirmação de Pedido - Estilo VIP #${orderId || ''}`,
+          ? `Pagamento Aprovado! Glamourize #${orderId || ''}`
+          : `Confirmação de Pedido - Glamourize #${orderId || ''}`,
         html: emailHtml
       })
     });
